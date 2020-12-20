@@ -16,6 +16,7 @@ router.get('/', (req, res, next) => {
     'client_id': process.env.CLIENT_ID,
     'client_secret': process.env.CLIENT_SECRETS,
   }).then((response) => {
+    console.log(response);
     res.status(201).json({
       "Success": {
         "access_token": response['access_token'],
