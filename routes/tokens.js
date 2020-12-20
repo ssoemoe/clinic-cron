@@ -11,7 +11,6 @@ router.get('/', (req, res, next) => {
   }
   axios.post(url, {
     'code': code,
-    'grant_type': 'authorization_code',
     'redirect_uri': process.env.REDIRECT_URI,
     'client_id': process.env.CLIENT_ID,
     'client_secret': process.env.CLIENT_SECRETS,
