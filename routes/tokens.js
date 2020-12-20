@@ -22,9 +22,9 @@ router.get('/', (req, res, next) => {
     console.log(response);
     res.status(201).json({
       "Success": {
-        "access_token": response['access_token'],
-        "refresh_token": response['refresh_token'],
-        "expiration_seconds": response['expires_in']
+        "access_token": response['data']['access_token'],
+        "refresh_token": response['data']['refresh_token'],
+        "expiration_seconds": response['data']['expires_in']
       }
     });
   }).catch((error) => {
