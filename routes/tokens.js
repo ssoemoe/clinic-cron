@@ -8,6 +8,7 @@ router.get('/', (req, res, next) => {
   const url = `https://drchrono.com/o/token/`;
   const dataParams = {
     'code': code,
+    'grant_type': 'authorization_code',
     'redirect_uri': process.env.REDIRECT_URI,
     'client_id': process.env.CLIENT_ID,
     'client_secret': process.env.CLIENT_SECRETS,
@@ -22,7 +23,6 @@ router.get('/', (req, res, next) => {
     res.status(201).json({
       "Success": {
         "access_token": response['access_token'],
-        'grant_type': 'authorization_code',
         "refresh_token": response['refresh_token'],
         "expiration_seconds": response['expires_in']
       }
