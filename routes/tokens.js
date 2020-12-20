@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
   if (!code) {
     return res.status(404).json({ "status": "Code is not in the query GET parameter!" });
   }
-  axios.post(url, data, headers).then((response) => {
+  axios.post(url, data, config).then((response) => {
     console.log(response);
     res.status(201).json({
       "Success": {
