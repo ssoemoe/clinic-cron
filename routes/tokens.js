@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
     'client_id': process.env.CLIENT_ID,
     'client_secret': process.env.CLIENT_SECRETS,
   };
-  const data = Object.entries(dataParams).map((key, val) => `${key}=${encodeURIComponent(val)}`).join('&');
+  const data = Object.entries(dataParams).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
   const config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
   if (!code) {
     return res.status(404).json({ "status": "Code is not in the query GET parameter!" });
