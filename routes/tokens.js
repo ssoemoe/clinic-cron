@@ -13,10 +13,11 @@ router.get('/', (req, res, next) => {
     'client_secret': process.env.CLIENT_SECRETS,
   };
   const data = Object.entries(dataParams).map((key, val) => `${key}=${encodeURIComponent(val)}`).join('&');
+  const config = { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
   if (!code) {
     return res.status(404).json({ "status": "Code is not in the query GET parameter!" });
   }
-  axios.post(url, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then((response) => {
+  axios.post(url, data, headers).then((response) => {
     console.log(response);
     res.status(201).json({
       "Success": {
@@ -28,6 +29,7 @@ router.get('/', (req, res, next) => {
     });
   }).catch((error) => {
     console.log(error);
+    console.log(data);
     res.status(404).json({ "Failed": error.message });
   });
 });
