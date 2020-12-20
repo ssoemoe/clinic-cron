@@ -6,15 +6,17 @@ var router = express.Router();
 router.get('/', (req, res, next) => {
   const code = req.query.code;
   const url = `https://drchrono.com/o/token/`;
-  if (!code) {
-    return res.status(404).json({ "status": "Code is not in the query GET parameter!" });
-  }
-  axios.post(url, {
+  const dataParams = {
     'code': code,
     'redirect_uri': process.env.REDIRECT_URI,
     'client_id': process.env.CLIENT_ID,
     'client_secret': process.env.CLIENT_SECRETS,
-  }).then((response) => {
+  };
+  const data = Object.entries(dataParams).map((key, val) => `${key}=${encodeURIComponent(val)}`).join('&');
+  if (!code) {
+    return res.status(404).json({ "status": "Code is not in the query GET parameter!" });
+  }
+  axios.post(url, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).then((response) => {
     console.log(response);
     res.status(201).json({
       "Success": {
