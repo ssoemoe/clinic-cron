@@ -3,7 +3,7 @@ var axios = require('axios');
 var router = express.Router();
 
 /* retrieves the code and setup the access_token and refresh_token */
-router.get('/tokens', (req, res, next) => {
+router.get('/', (req, res, next) => {
   const code = req.query.code;
   const url = `https://drchrono.com/o/authorize`;
   if (!code) {
