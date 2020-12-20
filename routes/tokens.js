@@ -25,6 +25,7 @@ router.get('/', (req, res, next) => {
       }
     });
   }).catch((error) => {
+    console.log(error);
     res.status(404).json({ "Failed": error.message });
   });
 });
