@@ -1,6 +1,6 @@
 # Clinic Cron
 
-Clinic Cron is an online website scheduler and contactless check-in with Alexa between clinics/doctors and patients.
+Clinic Cron is a contactless check-in app with Amazon Alexa between clinics/doctors and patients using DrChrono APIs.
 (A hackathon project for DrChron hackathon on DevPost)
 
 ## AUTHORS
