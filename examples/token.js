@@ -1,5 +1,5 @@
 const axios = require("axios");
-const code = 'Mm2eSE4EpQkyU0ZAsW7aA7R3VSotSv';
+const code = 'Mm2eSE4EpQkyU0ZAsW7aA7R3VSotSv'; // given out when authorized via UI page
 const url = `https://drchrono.com/o/authorize`;
 axios.post(url, {
     'code': code,
