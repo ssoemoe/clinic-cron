@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
     'client_secret': process.env.CLIENT_SECRETS,
   }, {
     headers: {
-      'Content-Type': 'x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   }).then((response) => {
     console.log(response);
