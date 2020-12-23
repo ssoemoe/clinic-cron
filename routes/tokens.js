@@ -3,7 +3,7 @@ var axios = require('axios');
 var router = express.Router();
 
 /* retrieves the code and setup the access_token and refresh_token */
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   const code = req.query.code;
   const url = `https://drchrono.com/o/token/`;
   const dataParams = {
@@ -18,20 +18,23 @@ router.get('/', (req, res, next) => {
   if (!code) {
     return res.status(404).json({ "status": "Code is not in the query GET parameter!" });
   }
-  axios.post(url, data, config).then((response) => {
-    console.log(response);
-    res.status(201).json({
+  try {
+    const response = await axios.post(url, data, config);
+    const responseJson = await response.json();
+    console.log(responseJson);
+    return res.status(201).json({
       "Success": {
-        "access_token": response['data']['access_token'],
-        "refresh_token": response['data']['refresh_token'],
-        "expiration_seconds": response['data']['expires_in']
+        "access_token": responseJson['data']['access_token'],
+        "refresh_token": responseJson['data']['refresh_token'],
+        "expiration_seconds": responseJson['data']['expires_in']
       }
     });
-  }).catch((error) => {
+  }
+  catch (error) {
     console.log(error);
     console.log(data);
-    res.status(404).json({ "Failed": error.message });
-  });
+    return res.status(400).json({ "Failed": error.message });
+  }
 });
 
 module.exports = router;
