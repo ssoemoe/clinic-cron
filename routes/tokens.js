@@ -1,9 +1,14 @@
 var express = require('express');
 var axios = require('axios');
 var router = express.Router();
+var utility = require('../utility');
+
+// file vars
+const tokenDir = 'config';
 
 /* retrieves the code and setup the access_token and refresh_token */
 router.get('/', async (req, res, next) => {
+  utility.createDirIfNotExists(tokenDir);
   const code = req.query.code;
   const url = `https://drchrono.com/o/token/`;
   const dataParams = {
@@ -22,6 +27,8 @@ router.get('/', async (req, res, next) => {
     const response = await axios.post(url, data, config);
     const responseJson = await response.json();
     console.log(responseJson);
+    utility.saveConfig(responseJson['data']['access_token'], tokenDir, 'access_token');
+    utility.saveConfig(responseJson['data']['refresh_token'], tokenDir, 'refresh_token');
     return res.status(201).json({
       "Success": {
         "access_token": responseJson['data']['access_token'],
