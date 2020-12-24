@@ -25,15 +25,14 @@ router.get('/', async (req, res, next) => {
   }
   try {
     const response = await axios.post(url, data, config);
-    const responseJson = await response.json();
-    console.log(responseJson);
-    utility.saveConfig(responseJson['data']['access_token'], tokenDir, 'access_token');
-    utility.saveConfig(responseJson['data']['refresh_token'], tokenDir, 'refresh_token');
+    console.log(response);
+    utility.saveConfig(response['data']['access_token'], tokenDir, 'access_token');
+    utility.saveConfig(response['data']['refresh_token'], tokenDir, 'refresh_token');
     return res.status(201).json({
       "Success": {
-        "access_token": responseJson['data']['access_token'],
-        "refresh_token": responseJson['data']['refresh_token'],
-        "expiration_seconds": responseJson['data']['expires_in']
+        "access_token": response['data']['access_token'],
+        "refresh_token": response['data']['refresh_token'],
+        "expiration_seconds": response['data']['expires_in']
       }
     });
   }
