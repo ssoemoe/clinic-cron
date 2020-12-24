@@ -6,7 +6,7 @@ var utility = require('../utility');
 // file vars
 const tokenDir = 'config';
 
-/* retrieves the code and setup the access_token and refresh_token */
+/* retrieves the code and setup the access_token and refresh_token under the config folder */
 router.get('/', async (req, res, next) => {
   utility.createDirIfNotExists(tokenDir);
   const code = req.query.code;
@@ -41,6 +41,13 @@ router.get('/', async (req, res, next) => {
     console.log(data);
     return res.status(400).json({ "Failed": error.message });
   }
+});
+
+/* Simple refresh token GET method */
+router.get('/access-token', async (req, res, next) => {
+  const token = await utility.refreshToken();
+  console.log(`Access Token: ${token}`);
+  return res.status(200).json({ "access_token": token });
 });
 
 module.exports = router;
