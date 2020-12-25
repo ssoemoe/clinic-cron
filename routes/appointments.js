@@ -42,7 +42,6 @@ router.get('/check-in/:appointmentId/:doctorId/:patientId/:appointmentTime', asy
         const time = new Date(appointment_time).toLocaleTimeString();
         const title = `${patient['first_name']} ${patient['last_name']} for ${time} is in the room now`;
         const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
-        console.log(notificationResponse);
         if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
             return res.status(200).json({ 'checkedIn': notificationResponse['status'] });
     }
@@ -50,9 +49,18 @@ router.get('/check-in/:appointmentId/:doctorId/:patientId/:appointmentTime', asy
 });
 
 /* the endpoint is to let the actual patient deny the check-in and notify the provider for the attention */
-router.get('/deny/:appointmentId', async (req, res, next) => {
+router.get('/deny/:appointmentId/:doctorId/:appointmentTime', async (req, res, next) => {
     const appointment_id = req.params.appointmentId;
-    return res.status(200).json({ 'denied': true });
+    const doctor_id = req.params.doctorId;
+    const appointment_time = req.params.appointmentTime;
+    const time = new Date(appointment_time).toLocaleTimeString();
+    const title = `Appointment at ${time} needs attention. The actual patient did not check-in.`;
+    // retrieves access_token for DrChrono API calls
+    const access_token = await utility.refreshToken();
+    const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
+    if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
+        return res.status(200).json({ 'notifiedClinic': notificationResponse['status'] });
+    return res.status(200).json({ 'failed': 'Fail to report the problem' });
 });
 
 
