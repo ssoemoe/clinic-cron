@@ -1,4 +1,7 @@
 config/
+db/
+bundle/
+bundle.zip
 examples/
 .DS_Store
 Thumbs.db
