@@ -43,9 +43,26 @@ router.get('/email/:appointmentId/:doctorId/:patientId/:appointmentTime', async 
     const appointment_date = new Date(appointment_time);
     const access_token = await utility.refreshToken();
     const patient = await utility.getPatientInfo(patient_id, access_token);
-    const appointment = await utility.getAppointments(appointment_time, access_token);
     const doctor = await utility.getDoctorInfo(doctor_id, access_token);
-    const title = `Appointment Check-in`;
+    const url = 'http://localhost:3000/appointments';
+    const subject = `Appointment Check-in`;
+    let content = `<span style="font-size: 20px">Did you check-in for today appointment with Dr. ${doctor['last_name']} at ${appointment_date.toLocaleTimeString()}?</span><br/>
+    <button style="background-color: green;border-radius: 5px;">
+        <a style="color: white;text-decoration: none" href="${url}/check-in/${appointment_id}/${doctor_id}/${patient_id}/${appointment_time}">YES, that was me.</a>
+    </button>
+    <button style="background-color: red;border-radius: 5px;">
+        <a style="color: white;text-decoration: none" href="${url}/deny/${appointment_id}/${doctor_id}/${appointment_time}">NO, that was not me.</a>
+    </button><br/>`;
+    if (!patient['social_security_number']) {
+        content = content + '<br/><b>Please fill out this form!</b>';
+    }
+    try {
+        await utility.sendEmail(patient['email'], subject, content);
+        return res.status(200).json({ 'status': 'Email sent to patient!' });
+    }
+    catch (error) {
+        return res.status(400).json({ 'status': 'Email was not sent!' });
+    }
 });
 
 /* the endpoint confirms the patient checked-in and ready in the room */
