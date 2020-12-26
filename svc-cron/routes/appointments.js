@@ -1,3 +1,4 @@
+var axios = require('axios');
 var express = require('express');
 var router = express.Router();
 var utility = require('../utility');
@@ -18,13 +19,18 @@ router.get('/', async (req, res, next) => {
     const access_token = await utility.refreshToken();
     // retrieves all appointments in the same day
     const return_appointments = await utility.getAppointments(appointment_time, access_token);
+    console.log(return_appointments.length);
     // filters out the exact appointment
     const appointments = return_appointments.filter(appointment => new Date(appointment['scheduled_time']).getTime() - requestDate.getTime() == 0);
     // return empty array if there is no appointment
     if (appointments.length == 0) return res.status(200).json(appointments);
     // retrieves and inserts the patient's last name to confirm with the patient
     const patient = await utility.getPatientInfo(appointments[0]['patient'], access_token);
+    const doctor = await utility.getDoctorInfo(appointments[0]['doctor'], access_token);
+    appointments[0]['first_name'] = patient['first_name'];
     appointments[0]['last_name'] = patient['last_name'];
+    appointments[0]['doctor_first_name'] = doctor['first_name'];
+    appointments[0]['doctor_last_name'] = doctor['last_name'];
     return res.status(200).json(appointments);
 });
 
@@ -61,6 +67,31 @@ router.get('/deny/:appointmentId/:doctorId/:appointmentTime', async (req, res, n
     if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
         return res.status(200).json({ 'notifiedClinic': notificationResponse['status'] });
     return res.status(200).json({ 'failed': 'Fail to report the problem' });
+});
+
+/* This is the endpoint to populate appointments in DrChrono dashboard (for demo) */
+router.get('/populate-appointments', async (req, res, next) => {
+    const data = {
+        doctor: 286076,
+        office: 303862,
+        duration: 45, // in minutes
+        exam_room: 1,
+        patient: 0,
+        scheduled_time: new Date().toISOString()
+    }
+    const access_token = await utility.refreshToken();
+    const config = { headers: { Authorization: `Bearer ${access_token}` } };
+    let response = await axios.get('https://app.drchrono.com/api/patients', config);
+    let patients = response['data']['results'];
+    let currentDate = new Date();
+    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}T06:00:00`);
+    for (let p of patients) {
+        dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
+        data['patient'] = p['id'];
+        data['scheduled_time'] = dummyAppointmentTime.toISOString().replace(/\.\d{3}Z/i, '');
+        const response = await utility.createAppointment(data, access_token);
+    }
+    res.status(200).json(patients);
 });
 
 
