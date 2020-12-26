@@ -116,3 +116,7 @@ module.exports.getDoctorInfo = async (id, access_token) => {
         return error;
     }
 };
+
+module.exports.sendEmail = async (toEmail, title, content) => {
+
+}

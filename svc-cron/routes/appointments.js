@@ -34,6 +34,20 @@ router.get('/', async (req, res, next) => {
     return res.status(200).json(appointments);
 });
 
+/* email sending to patient endpoint */
+router.get('/email/:appointmentId/:doctorId/:patientId/:appointmentTime', async (req, res, next) => {
+    const appointment_id = req.params.appointmentId;
+    const doctor_id = req.params.doctorId;
+    const patient_id = req.params.patientId;
+    const appointment_time = req.params.appointmentTime;
+    const appointment_date = new Date(appointment_time);
+    const access_token = await utility.refreshToken();
+    const patient = await utility.getPatientInfo(patient_id, access_token);
+    const appointment = await utility.getAppointments(appointment_time, access_token);
+    const doctor = await utility.getDoctorInfo(doctor_id, access_token);
+    const title = `Appointment Check-in`;
+});
+
 /* the endpoint confirms the patient checked-in and ready in the room */
 router.get('/check-in/:appointmentId/:doctorId/:patientId/:appointmentTime', async (req, res, next) => {
     const appointment_id = req.params.appointmentId;
