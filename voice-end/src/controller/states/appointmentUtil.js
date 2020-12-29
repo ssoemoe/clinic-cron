@@ -5,7 +5,7 @@ module.exports = {
     findPatientAppointmentToday:  (appointmentData, patientName) => {
 
        return ( module.exports.getAppointmentsToday(appointmentData).filter((element)=>{
-            if (element.first_name.toLowerCase() === patientName.toLowerCase() || element.last_name.toLowerCase() === patientName.toLowerCase()) {
+        if ((element.first_name && element.last_name && (element.first_name.toLowerCase() === patientName.toLowerCase() || element.last_name.toLowerCase() === patientName.toLowerCase()))) {
                 return true
             }else {
                 return false
@@ -28,7 +28,7 @@ module.exports = {
         for (let i = 0; i < appointmentList.length; i++) {
             const element = appointmentList[i];
 
-            if (element.first_name.toLowerCase() === patientName.toLowerCase() || element.last_name.toLowerCase() === patientName.toLowerCase()) {
+            if ((element.first_name && element.last_name && (element.first_name.toLowerCase() === patientName.toLowerCase() || element.last_name.toLowerCase() === patientName.toLowerCase()))) {
                 return element
             }
         }

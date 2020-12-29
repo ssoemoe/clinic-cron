@@ -8,13 +8,9 @@ module.exports = {
 
     getAppointments: async () => {
         console.log("api: getAppointments")
-        let date = moment(new Date().setDate(24))
-
-
-        let dateParam = date.format("YYYY-MM-DD") + "T22:00:00";
-
+              
         const options = {
-            uri: `${root}/appointments?date=${dateParam}`,
+            uri: `${root}/appointments`,
             json: true // Automatically parses the JSON string in the response
         };
         return await requestPromise(options);
