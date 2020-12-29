@@ -35,7 +35,7 @@ module.exports.refreshToken = async () => {
 module.exports.getAppointments = async (dateStr, access_token) => {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
     try {
-        const response = await axios.get(`https://app.drchrono.com/api/appointments?date=${dateStr}&page_size=100`, config);
+        const response = await axios.get(`https://app.drchrono.com/api/appointments?date_range=${dateStr}&page_size=300`, config);
         return response['data']['results'];
     }
     catch (error) {

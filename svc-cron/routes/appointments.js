@@ -10,18 +10,18 @@ var utility = require('../utility');
 router.get('/', async (req, res, next) => {
     const millisecondsRegex = /\.\d{3}Z/i;
     // if no time provided, we will use the current time.
-    const appointment_time = req.query.date ? req.query.date : new Date().toISOString();
-    // converts the string to date
-    const requestDate = new Date(appointment_time);
-    // removes the .000Z extra from the time string
-    appointment_time.replace(millisecondsRegex, '');
+    const appointment_date = req.query.date ? new Date(req.query.date) : new Date();
+    const yesterday = new Date();
+    yesterday.setDate(appointment_date.getDate() - 1);
+    const dayAfterTomorrow = new Date();
+    dayAfterTomorrow.setDate(appointment_date.getDate() + 2);
+    const appointment_time = `${yesterday.toISOString().replace(millisecondsRegex, '')}/${dayAfterTomorrow.toISOString().replace(millisecondsRegex, '')}`;
+    console.log(appointment_time);
     // retrieves access_token for DrChrono API calls
     const access_token = await utility.refreshToken();
     // retrieves all appointments in the same day
-    const return_appointments = await utility.getAppointments(appointment_time, access_token);
-    console.log(return_appointments.length);
-    // filters out the exact appointment
-    const appointments = return_appointments.filter(appointment => new Date(appointment['scheduled_time']).getTime() - requestDate.getTime() == 0);
+    const appointments = await utility.getAppointments(appointment_time, access_token);
+    console.log(appointments.length);
     // return empty array if there is no appointment
     if (appointments.length == 0) return res.status(200).json(appointments);
     // retrieves and inserts the patient's last name to confirm with the patient
