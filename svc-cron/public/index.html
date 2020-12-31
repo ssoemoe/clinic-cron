@@ -2,93 +2,18 @@
 <html>
 
 <head>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <link href="./stylesheets/style.css" rel="stylesheet" />
 </head>
 
 <body>
-  <div class="container">
-    <div class="row">
-      <section>
-        <div class="wizard">
-          <h1>Jquery Steps by mmm</h1>
-          <div class="wizard-inner">
-            <div class="connecting-line"></div>
-            <ul class="nav nav-tabs" role="tablist">
-
-              <li role="presentation" class="active">
-                <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
-                  <span class="round-tab">
-                    <i class="glyphicon glyphicon-folder-open"></i>
-                  </span>
-                </a>
-              </li>
-
-              <li role="presentation" class="disabled">
-                <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
-                  <span class="round-tab">
-                    <i class="glyphicon glyphicon-pencil"></i>
-                  </span>
-                </a>
-              </li>
-              <li role="presentation" class="disabled">
-                <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
-                  <span class="round-tab">
-                    <i class="glyphicon glyphicon-picture"></i>
-                  </span>
-                </a>
-              </li>
-
-              <li role="presentation" class="disabled">
-                <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
-                  <span class="round-tab">
-                    <i class="glyphicon glyphicon-ok"></i>
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <form role="form">
-            <div class="tab-content">
-              <div class="tab-pane active" role="tabpanel" id="step1">
-                <h3>Step one</h3>
-                <p>first step</p>
-                <ul class="list-inline pull-right">
-                  <li><button type="button" class="btn btn-primary next-step">next</button></li>
-                </ul>
-              </div>
-              <div class="tab-pane" role="tabpanel" id="step2">
-                <h3>Step two</h3>
-                <p>Second step</p>
-                <ul class="list-inline pull-right">
-                  <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
-                  <li><button type="button" class="btn btn-primary next-step">next</button></li>
-                </ul>
-              </div>
-              <div class="tab-pane" role="tabpanel" id="step3">
-                <h3>Step three</h3>
-                <p>Third step</p>
-                <ul class="list-inline pull-right">
-                  <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
-                  <li><button type="button" class="btn btn-default next-step">next</button></li>
-                </ul>
-              </div>
-              <div class="tab-pane" role="tabpanel" id="complete">
-                <h3>Complete steps</h3>
-                <p>You have successfully completed every steps.</p>
-                <ul class="list-inline pull-right">
-                  <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
-                  <li><button type="button" class="btn btn-primary btn-info-full next-step">Submit</button></li>
-                </ul>
-              </div>
-              <div class="clearfix"></div>
-            </div>
-          </form>
-        </div>
-      </section>
+  <div class="container h-100">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-12 text-center new-patient-form">
+      </div>
     </div>
   </div>
   <script src="./javascripts/index.js" defer></script>
