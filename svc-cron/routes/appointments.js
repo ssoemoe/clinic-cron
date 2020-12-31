@@ -54,7 +54,7 @@ router.get('/email/:appointmentId/:doctorId/:patientId/:appointmentTime', async 
         <a style="color: white;text-decoration: none" href="${url}/deny/${appointment_id}/${doctor_id}/${appointment_time}">NO, that was not me.</a>
     </button><br/>`;
     if (!patient['social_security_number']) {
-        content = content + '<br/><b>Please fill out this form!</b>';
+        content = content + `<br/><b>Please click <a href="http://localhost:3000?id=${patient['id']}&first_name=${patient['first_name']}">here</a> and fill out the new patient form!</b>`;
     }
     try {
         await utility.sendEmail(patient['email'], subject, content);
