@@ -6,9 +6,25 @@ body {
   align-items: center;
 }
 
-.new-patient-form {
+#new-patient-form {
   font-size: 70px;
   font-family: 'Source Code Pro', monospace;
+}
+
+.center-div {
   top:30%;
   position: absolute;
+}
+
+.buttons {
+  margin-top: 100px;
+  text-align: center;
+}
+
+.btn {
+  color: #89609E;
+  background-color: white;
+  width: 150px;
+  font-size: 30px;
+  margin: 100px;
 }

@@ -12,9 +12,25 @@
 <body>
   <div class="container h-100">
     <div class="row justify-content-center align-items-center">
-      <div class="col-12 text-center new-patient-form">
+      <div class="col-12 center-div">
+        <div class="text-center" id="new-patient-form">
+          Welcome to Clinic Cron!
+        </div>
+        <div class="buttons justify-content-center">
+          <button class="btn" id="prev">Previous</button>
+          <button class="btn" id="next">Next</button>
+        </div>
       </div>
     </div>
+  </div>
+  <div id="first" hidden>
+    Welcome to Clinic Cron!
+  </div>
+  <div id="second" hidden>
+    First Name
+  </div>
+  <div id="third" hidden>
+    Last Name
   </div>
   <script src="./javascripts/index.js" defer></script>
 </body>
