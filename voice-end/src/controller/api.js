@@ -7,7 +7,7 @@ const root = "http://localhost:3000"
 module.exports = {
 
     getAppointments: async () => {
-        console.log("api: getAppointments")
+        console.log(" >>api: getAppointments")
               
         const options = {
             uri: `${root}/appointments`,
@@ -18,7 +18,7 @@ module.exports = {
     }, 
 
     sendCheckInEmail: async (appointmentId,doctorId,patientId,appointmentTime) => {
-        console.log("api: sendCheckInEmail") 
+        console.log(" >>api: sendCheckInEmail") 
 
         const options = {
             uri: `${root}/appointments/email/${appointmentId}/${doctorId}/${patientId}/${appointmentTime}`,
