@@ -38,13 +38,27 @@ app.setHandler({
     return this.toIntent('HelloWorldIntent');
   },
 
-  HelloWorldIntent() {
-    this.ask("Welcome to the Chron Clinic! To check-in, please tell me your name");
+  async HelloWorldIntent() {
+    this.$session.$data.name = {}
+    this.ask("Welcome to the Chron Clinic! To check-in, please tell me your first name");
   },
 
+
+  async FirstNameIntent() {
+    console.log("app: appointmentState");
+    await this.toStateIntent("appointmentState", "FirstName");
+  },
+  async LastNameIntent() {
+    console.log("app: appointmentState");
+    await this.toStateIntent("appointmentState", "LastName");
+  },
   async MyNameIsIntent() {
     console.log("app: appointmentState");
-    await this.toStateIntent("appointmentState", "CheckInIntent");
+    await this.toStateIntent("appointmentState", "Name");
+  },
+  async AppointmentTimeIntent() {
+    console.log("app: appointmentState");
+    await this.toStateIntent("appointmentState.AdditionalInfoState", "AppointmentTimeIntent");
   },
 
 });

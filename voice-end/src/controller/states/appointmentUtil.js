@@ -5,7 +5,8 @@ module.exports = {
     findPatientAppointmentToday:  (appointmentData, patientName) => {
 
        return ( module.exports.getAppointmentsToday(appointmentData).filter((element)=>{
-        if ((element.first_name && element.last_name && (element.first_name.toLowerCase() === patientName.toLowerCase() || element.last_name.toLowerCase() === patientName.toLowerCase()))) {
+        if (module.exports.compareNames({firstName: element.first_name, lastName: element.last_name },
+            {firstName: patientName.firstName, lastName: patientName.lastName })) {
                 return true
             }else {
                 return false
@@ -28,7 +29,8 @@ module.exports = {
         for (let i = 0; i < appointmentList.length; i++) {
             const element = appointmentList[i];
 
-            if ((element.first_name && element.last_name && (element.first_name.toLowerCase() === patientName.toLowerCase() || element.last_name.toLowerCase() === patientName.toLowerCase()))) {
+            if  (module.exports.compareNames({firstName: element.first_name, lastName: element.last_name },
+                {firstName: patientName.firstName, lastName: patientName.lastName })) {
                 return element
             }
         }
@@ -58,7 +60,28 @@ module.exports = {
         } else {
             return "error cannot find time frame";
         }
-    }
+    },
+
+    compareNames(apt, user){
+console.log(apt.lastName + "  " + user.lastName)
+        if(
+            (parseName(apt.lastName) == parseName(user.lastName)) &&(parseName(apt.firstName) == parseName(user.firstName)) ||
+            (parseName(apt.lastName) == parseName(user.firstName)) &&(parseName(apt.firstName) == parseName(user.lastName)) 
+            ){
+                return true;
+        }
+        return false;
+
+    },
 
 
+
+}
+
+
+function parseName(name){
+    if(name){
+        return name.trim().toLowerCase()
+   }
+   return "null"
 }
