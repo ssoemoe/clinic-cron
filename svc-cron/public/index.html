@@ -45,8 +45,8 @@
     <input type="text" id="street_address_2" />
   </div>
   <div id="state_div" hidden>
-    Which state do you live in?<br />(Example: MD for Maryland)<br><br />
-    <input type="text" id="state" />
+    Which state do you live in?<br /><br />
+    <input type="text" id="state">
   </div>
   <div id="cell_phone_number_div" hidden>
     What is your mobile phone number?<br><br />
@@ -96,9 +96,28 @@
     <input type="text" id="primary_insurance_company_name" />
   </div>
   <div id="primary_insurance_id_div" hidden>
-    What is the insurance ? <br><br />
+    What is the insurance number? <br><br />
     <input type="text" id="primary_insurance_id" />
   </div>
+  <div id="primary_insurance_plan_name_div" hidden>
+    What is the insurance plan name? <br><br />
+    <input type="text" id="primary_insurance_plan_name_id" />
+  </div>
+  <div id="primary_insurance_plan_type_div" hidden>
+    What is the insurance plan type? <br><br />
+    <input type="text" id="primary_insurance_plan_type_id" />
+  </div>
+  <div id="is_subscriber_div" hidden>
+    Are you the subscriber to the insurance? <br><br />
+    <input type="radio" id="yes_sub" name="is_subscriber" value="yes">
+    <label for="yes_sub">Yes</label><br>
+    <input type="radio" id="no_sub" name="is_subscriber" value="no">
+    <label for="no_sub">No</label><br>
+  </div>
+  <div id="submit_div" hidden>
+    <button id="submit_btn">Submit</button>
+  </div>
+  <div id="thank_you_div" hidden>Thank you!</div>
   <script src="./javascripts/index.js" defer></script>
 </body>
 

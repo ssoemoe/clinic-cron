@@ -84,7 +84,7 @@ router.get('/check-in/:appointmentId/:doctorId/:patientId/:appointmentTime', asy
         if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
             return res.status(200).json({ 'checkedIn': notificationResponse['status'] });
     }
-    return res.status(200).json({ 'failure': 'Failed to check-in' });
+    return res.status(400).json({ 'failure': 'Failed to check-in' });
 });
 
 /* the endpoint is to let the actual patient deny the check-in and notify the provider for the attention */
@@ -99,7 +99,7 @@ router.get('/deny/:appointmentId/:doctorId/:appointmentTime', async (req, res, n
     const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
     if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
         return res.status(200).json({ 'notifiedClinic': notificationResponse['status'] });
-    return res.status(200).json({ 'failed': 'Fail to report the problem' });
+    return res.status(400).json({ 'failed': 'Fail to report the problem' });
 });
 
 /* This is the endpoint to populate appointments in DrChrono dashboard (for demo) */

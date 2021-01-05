@@ -12,7 +12,18 @@ $(document).ready(function () {
         'home_phone_number_div',
         'email_div',
         'dob_div',
-        'gender_div'
+        'gender_div',
+        'ssn_div',
+        'employer_div',
+        'emergency_contact_number_div',
+        'emergency_contact_relationship_div',
+        'emergency_contact_name_div',
+        'primary_insurance_company_name_div',
+        'primary_insurance_id_div',
+        'primary_insurance_plan_name_div',
+        'primary_insurance_plan_type_div',
+        'is_subscriber_div',
+        'submit_div'
     ];
     const url = window.location.href;
     if (url.split('?').length < 2) {
