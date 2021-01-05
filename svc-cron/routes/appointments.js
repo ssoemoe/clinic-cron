@@ -25,12 +25,14 @@ router.get('/', async (req, res, next) => {
     // return empty array if there is no appointment
     if (appointments.length == 0) return res.status(200).json(appointments);
     // retrieves and inserts the patient's last name to confirm with the patient
-    const patient = await utility.getPatientInfo(appointments[0]['patient'], access_token);
-    const doctor = await utility.getDoctorInfo(appointments[0]['doctor'], access_token);
-    appointments[0]['first_name'] = patient['first_name'];
-    appointments[0]['last_name'] = patient['last_name'];
-    appointments[0]['doctor_first_name'] = doctor['first_name'];
-    appointments[0]['doctor_last_name'] = doctor['last_name'];
+    for (let i = 0; i < appointments.length; i++) {
+        const patient = await utility.getPatientInfo(appointments[i]['patient'], access_token);
+        const doctor = await utility.getDoctorInfo(appointments[i]['doctor'], access_token);
+        appointments[i]['first_name'] = patient['first_name'];
+        appointments[i]['last_name'] = patient['last_name'];
+        appointments[i]['doctor_first_name'] = doctor['first_name'];
+        appointments[i]['doctor_last_name'] = doctor['last_name'];
+    }
     return res.status(200).json(appointments);
 });
 
