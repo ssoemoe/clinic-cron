@@ -7,7 +7,7 @@ Clinic Attendant is a contact-less check-in app powered with Amazon Alexa and Go
 
 First, configure the app with environtment variables.  
 `REDIRECT_URI`  
-`CLIENT_ID`
+`CLIENT_ID`  
 `CLIENT_SECRETS`  
 
 Then, run the command:  
