@@ -115,7 +115,9 @@ router.get('/populate-appointments', async (req, res, next) => {
     let response = await axios.get('https://app.drchrono.com/api/patients', config);
     let patients = response['data']['results'];
     let currentDate = new Date();
-    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}T06:00:00`);
+    let monthString = currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : currentDate.getMonth() + 1;
+    let dateString = currentDate.getDate() < 10 ? `0${currentDate.getDate()}` : currentDate.getDate();
+    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${monthString}-${dateString}T06:00:00`);
     for (let p of patients) {
         dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
