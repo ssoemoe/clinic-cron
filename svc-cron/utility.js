@@ -1,7 +1,6 @@
 var axios = require('axios');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
-const { resolve } = require('path');
 
 module.exports.createDirIfNotExists = (dir) => {
     if (!fs.existsSync(dir)) {
