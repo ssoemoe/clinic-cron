@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -24,28 +25,75 @@
     </div>
   </div>
   <div id="first_name_div" hidden>
-    What is your first name? <br>
+    What is your first name? <br /><br />
     <input type="text" id="first_name" />
   </div>
   <div id="middle_name_div" hidden>
-    What is your middle name if there is any?<br />
+    What is your middle name? <i>(optional)</i><br /><br />
     <input type="text" id="middle_name" />
   </div>
   <div id="last_name_div" hidden>
-    What is your first name? <br>
+    What is your last name? <br><br />
     <input type="text" id="last_name" />
   </div>
   <div id="street_address_div" hidden>
-    What is your street address? <br>
+    What is your street address? <br><br />
     <input type="text" id="street_address" />
   </div>
   <div id="street_address_2_div" hidden>
-    What is your apartment/house number if there is any? <br>
+    What is your apartment/house number? <i>(optional)</i> <br><br />
     <input type="text" id="street_address_2" />
   </div>
   <div id="state_div" hidden>
-    Which state do you live in? (Example: MD for Maryland)<br>
-    <input type="text" id="state_address" />
+    Which state do you live in?<br />(Example: MD for Maryland)<br><br />
+    <input type="text" id="state" />
+  </div>
+  <div id="cell_phone_number_div" hidden>
+    What is your mobile phone number?<br><br />
+    <input type="text" id="cell_phone_number" />
+  </div>
+  <div id="home_phone_number_div" hidden>
+    What is your home phone number? <i>(optional)</i><br><br />
+    <input type="text" id="home_phone_number" />
+  </div>
+  <div id="email_div" hidden>
+    What is your email address? <br><br />
+    <input type="text" id="email" />
+  </div>
+  <div id="dob_div" hidden>
+    What is your date of birth? <br><br />
+    <input type="text" id="dob" />
+  </div>
+  <div id="gender_div" hidden>
+    What is your gender? <br><br />
+    <input type="radio" id="male" name="gender" value="male">
+    <label for="male">Male</label><br>
+    <input type="radio" id="female" name="gender" value="female">
+    <label for="female">Female</label><br>
+  </div>
+  <div id="ssn_div" hidden>
+    What is your social security number (SSN)? <br><br />
+    <input type="text" id="ssn" />
+  </div>
+  <div id="employer_div" hidden>
+    What is your employer? <i>Optional</i> <br><br />
+    <input type="text" id="employer" />
+  </div>
+  <div id="emergency_contact_number_div" hidden>
+    What is your emergency contact number? <br><br />
+    <input type="text" id="emergency_contact_number" />
+  </div>
+  <div id="emergency_contact_relationship_div" hidden>
+    What is your relationship to the emergency contact? <br><br />
+    <input type="text" id="emergency_contact_relationship" />
+  </div>
+  <div id="emergency_contact_name_div" hidden>
+    What is the name of the emergency contact? <br><br />
+    <input type="text" id="emergency_contact_name" />
+  </div>
+  <div id="primary_insurance_company_name_div" hidden>
+    What is the name of the insurance company? <br><br />
+    <input type="text" id="primary_insurance_company_name" />
   </div>
   <script src="./javascripts/index.js" defer></script>
 </body>
