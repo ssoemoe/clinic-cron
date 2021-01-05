@@ -1,8 +1,20 @@
-# Clinic Cron
+# Clinic Attendant
 
-Clinic Cron is a contact-less check-in app with Amazon Alexa and Google Assistant for clinics/doctors and patients using DrChrono APIs.
+Clinic Attendant is a contact-less check-in app powered with Amazon Alexa and Google Assistant for clinics/doctors and patients using DrChrono APIs.
 (A hackathon project for DrChron hackathon on DevPost)
 
+## Running the API app
+
+First, configure the app with environtment variables.  
+`REDIRECT_URI`  
+`CLIENT_ID`
+`CLIENT_SECRETS`  
+
+Then, run the command:  
+
+```
+npm run start-dev
+```
 
 
 ## Running the voice application 
