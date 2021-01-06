@@ -53,6 +53,29 @@ $(document).ready(function () {
         current = direction === 'next' ? current + 1 : current - 1;
         currentDiv = `#${divs[current]}`;
         $('#new-patient-form').html($(currentDiv).html());
+
+        // phone numbers
+        const phone_numbers = {
+            'cell_phone_number_div': 'cell_phone_number',
+            'home_phone_number_div': 'home_phone_number',
+            'emergency_contact_number_div': 'emergency_contact_number'
+        };
+        if (Object.keys(phone_numbers).includes(divs[current])) {
+            $(`#${phone_numbers[divs[current]]}`).on('input', function () {
+                if ($(this).val().trim().length === 10) {
+                    const text = $(this).val();
+                    $(this).val(`(${text.substring(0, 3)})-${text.substring(3, 6)}-${text.substring(6, 10)}`);
+                    return;
+                }
+            });
+        }
+
+        //submit button handler
+        $("#submit_btn").on('click', function () {
+            console.log(patientData);
+        });
+
+        //Determinin buttons if they need to show
         if (current !== 0) $('#prev').show();
         else $('#prev').hide();
         if (current === divs.length - 1) $('#next').hide();
@@ -60,19 +83,23 @@ $(document).ready(function () {
     }
 
     const retrievePatientData = () => {
-        const key = divs[current].split("_div")[0].trim();
         const inputs = $('#new-patient-form').find('input');
         if (inputs.length > 0) {
-            const value = inputs[0].value.trim();
-            patientData[key] = value;
+            for (let input of inputs) {
+                patientData[input.id] = input.type === "radio" ? input.checked : input.value;
+            }
         }
     }
 
     const displayPatientData = () => {
-        const key = divs[current].split("_div")[0].trim();
         const inputs = $('#new-patient-form').find('input');
-        if (inputs.length > 0 && patientData[key]) {
-            inputs[0].value = patientData[key];
+        if (inputs.length > 0) {
+            for (let input of inputs) {
+                if (patientData[input.id]) {
+                    if (input.type === "radio") input.checked = patientData[input.id];
+                    else input.value = patientData[input.id];
+                }
+            }
         }
     }
 

@@ -30,13 +30,13 @@ body {
   font-size: 30px;
 }
 
-input[type=text] {
+input[type=text], input[type=password] {
   width: 350px;
 }
 
 input[type=radio] {
-  height: 50px;
-  width: 50px;
+  height: 30px;
+  width: 30px;
 }
 
 #submit_btn {

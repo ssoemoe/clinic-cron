@@ -61,8 +61,10 @@
     <input type="text" id="email" />
   </div>
   <div id="dob_div" hidden>
-    What is your date of birth? <br><br />
-    <input type="text" id="dob" />
+    What is your date of birth? (mm/dd/yyyy) <br><br />
+    <input style="width: 50px !important;" type="text" pattern="\d*" maxlength="2" id="dob_month" />/
+    <input style="width: 50px !important;" type="text" pattern="\d*" maxlength="2" id="dob_day" />/
+    <input style="width: 100px !important;" type="text" pattern="\d*" maxlength="4" id="dob_year" />
   </div>
   <div id="gender_div" hidden>
     What is your gender? <br><br />
@@ -73,10 +75,10 @@
   </div>
   <div id="ssn_div" hidden>
     What is your social security number (SSN)? <br><br />
-    <input type="text" id="ssn" />
+    <input type="password" id="ssn" />
   </div>
   <div id="employer_div" hidden>
-    What is your employer? <i>Optional</i> <br><br />
+    What is your employer? <br /> <i>(optional)</i> <br><br />
     <input type="text" id="employer" />
   </div>
   <div id="emergency_contact_number_div" hidden>
