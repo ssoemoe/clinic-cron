@@ -55,6 +55,17 @@ module.exports.getPatientInfo = async (id, access_token) => {
     }
 }
 
+module.exports.updatePatientInfo = async (id, data, access_token) => {
+    const config = { headers: { Authorization: `Bearer ${access_token}` } };
+    try {
+        const response = await axios.patch(`https://app.drchrono.com/api/patients/${id}`, data, config);
+        return response;
+    }
+    catch (error) {
+        return error;
+    }
+}
+
 module.exports.createAppointment = async (appointmentInfo, access_token) => {
     const config = {
         headers: {

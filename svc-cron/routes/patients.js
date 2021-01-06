@@ -13,4 +13,15 @@ router.get('/:patient_id', async (req, res, next) => {
     }
 });
 
+router.put('/:patient_id', async (req, res, next) => {
+    try {
+        const access_token = await utility.refreshToken();
+        const response = await utility.updatePatientInfo(req.params.id, req.body, access_token);
+        return res.status(200).json(response);
+    }
+    catch (err) {
+        return res.status(400).json({ "fail": err.toString() });
+    }
+});
+
 module.exports = router;

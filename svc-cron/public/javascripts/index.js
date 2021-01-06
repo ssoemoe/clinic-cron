@@ -72,7 +72,11 @@ $(document).ready(function () {
 
         //submit button handler
         $("#submit_btn").on('click', function () {
-            console.log(patientData);
+            const data = {
+                "first_name": patientData["first_name"],
+                "middle_name": patientData["middle_name"],
+                "last_name": patientData["last_name"],
+            }
         });
 
         //Determinin buttons if they need to show
