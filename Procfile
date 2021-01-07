@@ -1,0 +1,1 @@
+api: node svc-cron/bin/www
