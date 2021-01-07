@@ -46,7 +46,7 @@ router.get('/email/:appointmentId/:doctorId/:patientId/:appointmentTime', async 
     const access_token = await utility.refreshToken();
     const patient = await utility.getPatientInfo(patient_id, access_token);
     const doctor = await utility.getDoctorInfo(doctor_id, access_token);
-    const url = 'http://localhost:3000/appointments';
+    const url = 'https://clinic-attendant.herokuapp.com/appointments';
     const subject = `Appointment Check-in`;
     let content = `<span style="font-size: 20px">Did you check-in for today appointment with Dr. ${doctor['last_name']} at ${appointment_date.toLocaleTimeString()}?</span><br/>
     <button style="background-color: green;border-radius: 5px;">
@@ -56,7 +56,7 @@ router.get('/email/:appointmentId/:doctorId/:patientId/:appointmentTime', async 
         <a style="color: white;text-decoration: none" href="${url}/deny/${appointment_id}/${doctor_id}/${appointment_time}">NO, that was not me.</a>
     </button><br/>`;
     if (!patient['social_security_number']) {
-        content = content + `<br/><b>Please click <a href="http://localhost:3000?id=${patient['id']}&first_name=${patient['first_name']}">here</a> and fill out the new patient form!</b>`;
+        content = content + `<br/><b>Please click <a href="https://clinic-attendant.herokuapp.com?id=${patient['id']}&first_name=${patient['first_name']}">here</a> and fill out the new patient form!</b>`;
     }
     try {
         await utility.sendEmail(patient['email'], subject, content);
