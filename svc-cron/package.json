@@ -12,8 +12,10 @@
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
+    "form-data": "^3.0.0",
     "morgan": "~1.9.1",
-    "nodemailer": "^6.4.17"
+    "nodemailer": "^6.4.17",
+    "querystring": "^0.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

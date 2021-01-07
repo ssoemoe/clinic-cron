@@ -7,6 +7,7 @@ $(document).ready(function () {
         'last_name_div',
         'street_address_div',
         'street_address_2_div',
+        'city_div',
         'state_div',
         'cell_phone_number_div',
         'home_phone_number_div',
@@ -14,7 +15,6 @@ $(document).ready(function () {
         'dob_div',
         'gender_div',
         'ssn_div',
-        'employer_div',
         'emergency_contact_number_div',
         'emergency_contact_relationship_div',
         'emergency_contact_name_div',
@@ -22,7 +22,6 @@ $(document).ready(function () {
         'primary_insurance_id_div',
         'primary_insurance_plan_name_div',
         'primary_insurance_plan_type_div',
-        'is_subscriber_div',
         'submit_div'
     ];
     const url = window.location.href;
@@ -64,19 +63,45 @@ $(document).ready(function () {
             $(`#${phone_numbers[divs[current]]}`).on('input', function () {
                 if ($(this).val().trim().length === 10) {
                     const text = $(this).val();
-                    $(this).val(`(${text.substring(0, 3)})-${text.substring(3, 6)}-${text.substring(6, 10)}`);
+                    $(this).val(`(${text.substring(0, 3)}) ${text.substring(3, 6)}-${text.substring(6, 10)}`);
                     return;
                 }
             });
         }
 
         //submit button handler
-        $("#submit_btn").on('click', function () {
+        $("#submit_btn").on('click', async function () {
             const data = {
                 "first_name": patientData["first_name"],
                 "middle_name": patientData["middle_name"],
                 "last_name": patientData["last_name"],
-            }
+                "address": `${patientData["street_address"]}${patientData['street_address_2'] ? ', ' + patientData['street_address_2'] : ''}`,
+                "city": patientData["city"],
+                "state": patientData["state"],
+                "cell_phone": patientData["cell_phone_number"],
+                "email": patientData["email"],
+                "date_of_birth": `${patientData['dob_year']}-${patientData["dob_month"]}-${patientData['dob_day']}`,
+                "gender": patientData["male"] ? "Male" : "Female",
+                "social_security_number": patientData["ssn"],
+                "emergency_contact_phone": patientData["emergency_contact_number"],
+                "emergency_contact_relation": patientData["emergency_contact_relationship"],
+                "emergency_contact_name": patientData["emergency_contact_name"],
+                "primary_insurance": {
+                    "insurance_company": patientData["primary_insurance_company_name"],
+                    "insurance_id_number": patientData["primary_insurance_id"],
+                    "insurance_plan_name": patientData["primary_insurance_plan_name_id"],
+                    "insurance_plan_type": patientData["primary_insurance_plan_type_id"]
+                }
+            };
+            if (patientData["home_phone_number"]) data["home_phone"] = patientData["home_phone_number"];
+            const response = await fetch(`/patients/${patientId}`, {
+                method: "PATCH",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            console.log(response);//DEBUG
+            $("#new-patient-form").html($('#thank_you_div').html());
+            $("#prev").hide();
         });
 
         //Determinin buttons if they need to show

@@ -44,9 +44,13 @@
     What is your apartment/house number? <i>(optional)</i> <br><br />
     <input type="text" id="street_address_2" />
   </div>
+  <div id="city_div" hidden>
+    In which city do you live?<br /><br />
+    <input type="text" id="city">
+  </div>
   <div id="state_div" hidden>
-    Which state do you live in?<br /><br />
-    <input type="text" id="state">
+    Enter 2-letter code for the state you live in:<br /><br />
+    <input type="text" maxlength="2" id="state">
   </div>
   <div id="cell_phone_number_div" hidden>
     What is your mobile phone number?<br><br />
@@ -77,10 +81,6 @@
     What is your social security number (SSN)? <br><br />
     <input type="password" id="ssn" />
   </div>
-  <div id="employer_div" hidden>
-    What is your employer? <br /> <i>(optional)</i> <br><br />
-    <input type="text" id="employer" />
-  </div>
   <div id="emergency_contact_number_div" hidden>
     What is your emergency contact number? <br><br />
     <input type="text" id="emergency_contact_number" />
@@ -108,13 +108,6 @@
   <div id="primary_insurance_plan_type_div" hidden>
     What is the insurance plan type? <br><br />
     <input type="text" id="primary_insurance_plan_type_id" />
-  </div>
-  <div id="is_subscriber_div" hidden>
-    Are you the subscriber to the insurance? <br><br />
-    <input type="radio" id="yes_sub" name="is_subscriber" value="yes">
-    <label for="yes_sub">Yes</label><br>
-    <input type="radio" id="no_sub" name="is_subscriber" value="no">
-    <label for="no_sub">No</label><br>
   </div>
   <div id="submit_div" hidden>
     <button id="submit_btn">Submit</button>
