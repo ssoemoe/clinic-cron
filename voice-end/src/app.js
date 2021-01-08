@@ -8,7 +8,6 @@ const { FileDb } = require('jovo-db-filedb');
 const requestPromise = require('request-promise-native');
 const util = require('./controller/states/appointmentUtil.js');
 const api = require('./controller/api.js');
-const axios = require("axios");
 
 
 // ------------------------------------------------------------------
@@ -73,7 +72,7 @@ app.setHandler({
     console.log("app: appointmentState");
     await this.toStateIntent("appointmentState", "Name");
   },
- 
+
   Help() {
 
     this.ask("Sorry, I didn't get that, please tell me your first name");
