@@ -1,7 +1,8 @@
 const moment = require("moment");
 const requestPromise = require('request-promise-native');
 
-const root = "http://localhost:3000"
+// const root = "http://localhost:3000"
+const root = "https://clinic-attendant.herokuapp.com"
 
 
 module.exports = {
