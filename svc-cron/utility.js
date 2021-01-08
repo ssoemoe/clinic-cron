@@ -17,7 +17,7 @@ module.exports.saveConfig = (data, dir, fileName) => {
 }
 
 module.exports.refreshToken = async () => {
-    const refreshToken = fs.readFileSync('./config/refresh_token', 'utf-8');
+    const refreshToken = process.env.REFRESH_TOKEN;
     if (!refreshToken) throw 'refresh token does not exist!';
     const dataParams = {
         'refresh_token': refreshToken,
