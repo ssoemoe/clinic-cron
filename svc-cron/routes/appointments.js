@@ -27,11 +27,8 @@ router.get('/', async (req, res, next) => {
     // retrieves and inserts the patient's last name to confirm with the patient
     for (let i = 0; i < appointments.length; i++) {
         const patient = await utility.getPatientInfo(appointments[i]['patient'], access_token);
-        const doctor = await utility.getDoctorInfo(appointments[i]['doctor'], access_token);
         appointments[i]['first_name'] = patient['first_name'];
         appointments[i]['last_name'] = patient['last_name'];
-        appointments[i]['doctor_first_name'] = doctor['first_name'];
-        appointments[i]['doctor_last_name'] = doctor['last_name'];
     }
     return res.status(200).json(appointments);
 });
@@ -56,7 +53,7 @@ router.get('/email/:appointmentId/:doctorId/:patientId/:appointmentTime', async 
         <a style="color: white;text-decoration: none" href="${url}/deny/${appointment_id}/${doctor_id}/${appointment_time}">NO, that was not me.</a>
     </button><br/>`;
     if (!patient['social_security_number']) {
-        content = content + `<br/><b>Please click <a href="https://clinic-attendant.herokuapp.com?id=${patient['id']}&first_name=${patient['first_name']}">here</a> and fill out the new patient form!</b>`;
+        content = content + `<br/><b>Please click <a href="https://clinic-attendant.herokuapp.com?id=${patient['id']}">here</a> and fill out the new patient form!</b>`;
     }
     try {
         await utility.sendEmail(patient['email'], subject, content);
