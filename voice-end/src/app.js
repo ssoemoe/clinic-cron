@@ -35,12 +35,29 @@ app.use(
 app.setHandler({
   appointmentState,
   LAUNCH() {
-    return this.toIntent('HelloWorldIntent');
+    return this.toIntent('Welcome');
   },
 
-  async HelloWorldIntent() {
-    this.$session.$data.name = {}
-    this.ask("Welcome to the Chron Clinic! To check-in, please tell me your first name");
+  async Welcome() {
+    //get appointment data
+    api.getAppointments().then(response => { console.log(response); this.$app.$data.appointmentData = response });
+
+    const welcomeMsg = ["Welcome to the Clinic Attendant!",
+      `${util.greetingTime()}! Welcome to the Clinic Attendant!`,
+      "Hello! Welcome to the Clinic Attendant!"
+    ]
+    const infoMsg = ["I am a doctor's smart assistant.",
+      "I an AI assistant built for doctors.",
+      "I an AI receptionist built for doctors.",
+    ]
+    const firstNameMgs = [
+      "To check-in, please tell me your first name?",
+      "To check-in, what is your first name?",
+    ]
+
+    this.$speech.addText(welcomeMsg).addText(infoMsg).addText(firstNameMgs)
+    this.showSimpleCard("Welcome to Clinic Attendant", "What is your first name")
+    this.ask(this.$speech);
   },
 
 
@@ -56,12 +73,17 @@ app.setHandler({
     console.log("app: appointmentState");
     await this.toStateIntent("appointmentState", "Name");
   },
-  async AppointmentTimeIntent() {
-    console.log("app: appointmentState");
-    await this.toStateIntent("appointmentState.AdditionalInfoState", "AppointmentTimeIntent");
+ 
+  Help() {
+
+    this.ask("Sorry, I didn't get that, please tell me your first name");
+  },
+
+  Unhandled() {
+    return this.toIntent('Help');
   },
 
 });
 
- 
+
 module.exports = { app };
