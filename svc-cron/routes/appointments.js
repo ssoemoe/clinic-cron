@@ -79,14 +79,13 @@ router.get('/check-in/:appointmentId/:doctorId/:patientId/:appointmentTime', asy
         const title = `${patient['first_name']} ${patient['last_name']} for ${time} is in the room now`;
         const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
         if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
-            return res.status(200).json({ 'checkedIn': notificationResponse['status'] });
+            return res.status(200).send('<h1>You are all set!</h1>');
     }
-    return res.status(400).json({ 'failure': 'Failed to check-in' });
+    return res.status(400).send('<h1>Sorry, can you please check-in at the clinic reception. We have failed to do it online</h1>');
 });
 
 /* the endpoint is to let the actual patient deny the check-in and notify the provider for the attention */
 router.get('/deny/:appointmentId/:doctorId/:appointmentTime', async (req, res, next) => {
-    const appointment_id = req.params.appointmentId;
     const doctor_id = req.params.doctorId;
     const appointment_time = req.params.appointmentTime;
     const time = new Date(appointment_time).toLocaleTimeString();
@@ -95,8 +94,8 @@ router.get('/deny/:appointmentId/:doctorId/:appointmentTime', async (req, res, n
     const access_token = await utility.refreshToken();
     const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
     if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
-        return res.status(200).json({ 'notifiedClinic': notificationResponse['status'] });
-    return res.status(400).json({ 'failed': 'Fail to report the problem' });
+        return res.status(200).send('<h1>Thanks for letting us know. We will let you know the incident in details.</h1>');
+    return res.status(400).send('<h1>Sorry, can you please notify the clinic reception. We have failed to do it online</h1>');
 });
 
 /* This is the endpoint to populate appointments in DrChrono dashboard (for demo) */
