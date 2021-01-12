@@ -1,9 +1,8 @@
 <p align="center">
     <img src="./assets/clinic-attendant-icon-round.png" width="200" hieght="300">
 </p>
-<p align="center">
-    <h1>Clinic Attendant</h1>
-</p>
+
+# Clinic Attendant
 
 Clinic Attendant is a contact-less check-in app powered with Amazon Alexa and Google Assistant for clinics/doctors and patients using DrChrono APIs.
 (A hackathon project for DrChron hackathon on DevPost)
