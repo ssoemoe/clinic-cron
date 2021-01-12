@@ -1,4 +1,9 @@
-# Clinic Attendant
+<div style="text-align:center">
+    <img src="./assets/clinic-attendant-icon-round.png" width="200" hieght="300">
+</div>
+<div style="text-align:center">
+<h1>Clinic Attendant</h1>
+</div>
 
 Clinic Attendant is a contact-less check-in app powered with Amazon Alexa and Google Assistant for clinics/doctors and patients using DrChrono APIs.
 (A hackathon project for DrChron hackathon on DevPost)
@@ -9,10 +14,13 @@ First, configure the app with environtment variables.
 `REDIRECT_URI`  
 `CLIENT_ID`  
 `CLIENT_SECRETS`  
+`REFRESH_TOKEN`
 
 Then, run the command:  
 
 ```
+cd svc-cron  
+npm install  
 npm run start-dev
 ```
 
