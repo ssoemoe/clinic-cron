@@ -34,6 +34,7 @@ app.use(
 app.setHandler({
   appointmentState,
   LAUNCH() {
+    console.log("Hello");//DEBUG
     return this.toIntent('Welcome');
   },
 
@@ -48,7 +49,7 @@ app.setHandler({
       "Hey! Welcome to the clinic",
     ]
     const infoMsg = ["I am a doctor's smart assistant and I will help you check-in your appointment. It is a pleasure to meet you.",
-      "I am a virutal assistant built for helping patients with appointment check-ins. It is nice to meet you.",
+      "I am a virtual assistant built for helping patients with appointment check-ins. It is nice to meet you.",
       "I am a virtual receptionist specialized in helping people check-in with their appointments. It is good to meet you today.",
     ]
     const firstNameMgs = [

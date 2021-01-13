@@ -70,7 +70,7 @@ module.exports = {
         else {
             this.ask(`Sorry something went wrong`);
         }
- 
+
     },
 
     async LastName() {
@@ -122,7 +122,7 @@ module.exports = {
         const numberOfAppointments = util.findPatientAppointmentToday(appointmentList, patientName)
         console.log(patientName);
         console.log(numberOfAppointments.length);
-        
+
         //If two people have the same name !! Change this to == 1 to test same name case
         if (numberOfAppointments.length == 2) {
 
@@ -139,7 +139,7 @@ module.exports = {
             this.$session.$data.firstName = null
             this.$session.$data.lastName = null
 
-            return this.ask(`Sorry, I didn't find an appointment today for ${patientName.firstName} ${patientName.lastName}. You can try saying the name again`);
+            return this.tell(`Sorry, I didn't find an appointment today for ${patientName.firstName} ${patientName.lastName}`);
 
 
         }
@@ -212,7 +212,19 @@ module.exports = {
 
 
             //Get time for input
-            const timeInput = this.$inputs.time ? this.$inputs.time.key : "error no time";
+            console.log(this.$inputs.time); //DEBUG
+            let timeInput = '';
+            if (this.$alexaSkill) {
+                const timeComponents = this.$inputs.time.key.split(':');
+                let date = new Date();
+                date.setHours(Number(timeComponents[0]));
+                date.setMinutes(Number(timeComponents[1]));
+                timeInput = date.toISOString();
+            }
+            else {
+                timeInput = this.$inputs ? this.$inputs.time.key : "error no time";
+            }
+            console.log(timeInput); //DEBUG
             this.$session.$data.dateTime = timeInput;
 
             //Get patient name for input

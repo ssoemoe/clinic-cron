@@ -6,6 +6,7 @@ module.exports = {
   logging: false,
 
   intentMap: {
+    'LaunchRequest': 'Welcome',
     'AMAZON.StopIntent': 'END',
   },
 
