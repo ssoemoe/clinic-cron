@@ -1,7 +1,6 @@
 var axios = require('axios');
 var fs = require('fs');
 var nodemailer = require('nodemailer');
-const { resolve } = require('path');
 
 module.exports.createDirIfNotExists = (dir) => {
     if (!fs.existsSync(dir)) {
@@ -18,7 +17,7 @@ module.exports.saveConfig = (data, dir, fileName) => {
 }
 
 module.exports.refreshToken = async () => {
-    const refreshToken = fs.readFileSync('./config/refresh_token', 'utf-8');
+    const refreshToken = process.env.REFRESH_TOKEN;
     if (!refreshToken) throw 'refresh token does not exist!';
     const dataParams = {
         'refresh_token': refreshToken,
@@ -34,26 +33,37 @@ module.exports.refreshToken = async () => {
 
 module.exports.getAppointments = async (dateStr, access_token) => {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    try {
-        const response = await axios.get(`https://app.drchrono.com/api/appointments?date_range=${dateStr}&page_size=300`, config);
-        return response['data']['results'];
-    }
-    catch (error) {
-        console.log(error);
-        return error;
-    }
+    const response = await axios.get(`https://app.drchrono.com/api/appointments?date_range=${dateStr}&page_size=300`, config);
+    return response['data']['results'];
 }
 
 module.exports.getPatientInfo = async (id, access_token) => {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    try {
-        const response = await axios.get(`https://app.drchrono.com/api/patients/${id}`, config);
-        return response['data'];
-    }
-    catch (error) {
-        console.log(error);
-        return error;
-    }
+    const response = await axios.get(`https://app.drchrono.com/api/patients/${id}`, config);
+    return response['data'];
+}
+
+module.exports.updatePatientInfo = async (id, formData, access_token) => {
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${access_token}`,
+            ...formData.getHeaders()
+        },
+    };
+    const response = await axios.patch(`https://app.drchrono.com/api/patients/${id}`, formData, config);
+    return response;
+}
+
+module.exports.createAppointment = async (appointmentInfo, access_token) => {
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+    const data = Object.entries(appointmentInfo).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+    const response = await axios.post(`https://app.drchrono.com/api/appointments`, data, config);
+    return response;
 }
 
 module.exports.createAppointment = async (appointmentInfo, access_token) => {
@@ -79,44 +89,28 @@ module.exports.checkInAppointment = async (id, access_token) => {
             'Authorization': `Bearer ${access_token}`
         }
     };
-    try {
-        const response = await axios.patch(`https://app.drchrono.com/api/appointments/${id}`, { status: 'In Room' }, config);
-        return response;
-    }
-    catch (error) {
-        return error;
-    }
+    const response = await axios.patch(`https://app.drchrono.com/api/appointments/${id}`, { status: 'In Room' }, config);
+    return response;
 }
 
-module.exports.notifyDoctor = async (doctor_id, title, access_token) => {
+module.exports.notifyDoctor = async (doctor_id, title, text, access_token) => {
     const config = {
         headers: {
             'Authorization': `Bearer ${access_token}`
         }
     };
-    try {
-        const response = await axios.post(`https://app.drchrono.com/api/messages`, {
-            'doctor': doctor_id,
-            'title': title,
-            'message_notes': [{ 'text': title }]
-        }, config);
-        return response;
-    }
-    catch (error) {
-        return error;
-    }
+    const response = await axios.post(`https://app.drchrono.com/api/messages`, {
+        'doctor': doctor_id,
+        'title': title,
+        'message_notes': [{ 'text': text }]
+    }, config);
+    return response;
 };
 
 module.exports.getDoctorInfo = async (id, access_token) => {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    try {
-        const response = await axios.get(`https://app.drchrono.com/api/doctors/${id}`, config);
-        return response['data'];
-    }
-    catch (error) {
-        console.log(error);
-        return error;
-    }
+    const response = await axios.get(`https://app.drchrono.com/api/doctors/${id}`, config);
+    return response['data'];
 };
 
 module.exports.sendEmail = async (toEmail, subject, content) => {
