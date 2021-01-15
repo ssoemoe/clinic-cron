@@ -67,7 +67,7 @@ $(document).ready(function () {
         for (let i = 0; i < result.length; i++) {
             var elem = $("<option></option>");
             elem.attr("value", result[i].payer_id);
-            let text = "";
+            let text = result[i].payer_name;
             if (result[i].payer_name.length > 20) {
                 text = result[i].payer_name.substring(0, 21);
             }
