@@ -25,6 +25,10 @@ $(document).ready(function () {
         'primary_insurance_plan_type_div',
         'submit_div'
     ];
+    const ins_plans = [
+        "Automobile Medical", "Blue Cross/Blue Shield", "Champus", "Commercial Insurance Co.", "Disability",
+        "Federal Employees Program", "Health Maintenance Organization", "Medicaid", "Veterans Affairs Plan"
+    ].sort();
     const url = window.location.href;
     if (url.split('?').length < 2) {
         alert("Url is malformed!");
@@ -46,6 +50,29 @@ $(document).ready(function () {
     // init
     $('#new-patient-form').html($(`#${divs[0]}`).html());
     $('#prev').hide();
+    for (let type of ins_plans) {
+        var elem = $("<option></option>");
+        elem.attr("value", type);
+        let text = type;
+        if (type > 20) {
+            text = type.substring(0, 21);
+        }
+        elem.text(text);
+        elem.appendTo($(`select#insurance_plan_type`));
+    }
+    $.getJSON("/insurances", function (insList) {
+        let result = insList.sort((a, b) => a.payer_name < b.payer_name ? -1 : a.payer_name > b.payer_name ? 1 : 0);
+        console.log(result);
+        for (let i = 0; i < result.length; i++) {
+            var elem = $("<option></option>");
+            elem.attr("value", result[i].payer_id);
+            if (result[i].payer_name.length > 20) {
+                result[i].payer_name = result[i].payer_name.substring(0, 21);
+            }
+            elem.text(result[i].payer_name);
+            elem.appendTo($(`select#primary_insurance_company_name`));
+        }
+    });
 
     const slide = (direction) => {
         if (direction === 'next' && current === divs.length - 1) return;
@@ -92,7 +119,27 @@ $(document).ready(function () {
                     "insurance_company": patientData["primary_insurance_company_name"],
                     "insurance_id_number": patientData["primary_insurance_id"],
                     "insurance_plan_name": patientData["primary_insurance_plan_name_id"],
-                    "insurance_plan_type": patientData["primary_insurance_plan_type_id"]
+                    "insurance_plan_type": patientData["insurance_plan_type"],
+                    "insurance_payer_id": patientData["insurance_payer_id"],
+                    "insurance_claim_office_number": "",
+                    "insurance_group_name": "",
+                    "insurance_group_number": "",
+                    "is_subscriber_the_patient": true,
+                    "patient_relationship_to_subscriber": "",
+                    "photo_back": "",
+                    "photo_front": "",
+                    "subscriber_address": "",
+                    "subscriber_city": "",
+                    "subscriber_country": "",
+                    "subscriber_date_of_birth": "",
+                    "subscriber_first_name": "",
+                    "subscriber_gender": "",
+                    "subscriber_last_name": "",
+                    "subscriber_middle_name": "",
+                    "subscriber_social_security": "",
+                    "subscriber_state": "",
+                    "subscriber_suffix": "",
+                    "subscriber_zip_code": ""
                 }
             };
             if (patientData["home_phone_number"]) data["home_phone"] = patientData["home_phone_number"];
@@ -115,21 +162,43 @@ $(document).ready(function () {
 
     const retrievePatientData = () => {
         const inputs = $('#new-patient-form').find('input');
+        const selects = $('#new-patient-form').find('select');
         if (inputs.length > 0) {
             for (let input of inputs) {
                 patientData[input.id] = input.type === "radio" ? input.checked : input.value;
+            }
+        }
+        else if (selects.length > 0) {
+            if (selects[0].id === "primary_insurance_company_name") {
+                patientData["insurance_payer_id"] = $(`#${selects[0].id}`).find(":selected").val();
+                patientData["primary_insurance_company_name"] = $(`#${selects[0].id}`).find(":selected").text();
+            }
+            else {
+                patientData["insurance_plan_type"] = $(`#${selects[0].id}`).find(":selected").val();
             }
         }
     }
 
     const displayPatientData = () => {
         const inputs = $('#new-patient-form').find('input');
+        const selects = $('#new-patient-form').find('select');
         if (inputs.length > 0) {
             for (let input of inputs) {
                 if (patientData[input.id]) {
                     if (input.type === "radio") input.checked = patientData[input.id];
                     else input.value = patientData[input.id];
                 }
+            }
+        }
+        else if (selects.length > 0) {
+            if (selects[0].id === "primary_insurance_company_name") {
+                $(`#${selects[0].id}`).find(":selected").val(patientData["insurance_payer_id"]);
+                $(`#${selects[0].id}`).find(":selected").text(patientData["primary_insurance_company_name"]);
+            }
+            else {
+
+                $(`#${selects[0].id}`).find(":selected").val(patientData["insurance_plan_type"]);
+                $(`#${selects[0].id}`).find(":selected").text(patientData["insurance_plan_type"]);
             }
         }
     }

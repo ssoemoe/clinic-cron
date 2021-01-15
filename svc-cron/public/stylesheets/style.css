@@ -43,3 +43,11 @@ input[type=radio] {
   padding: 20px;
   border-radius: 10px;
 }
+
+#primary_insurance_company_name option, #insurance_plan_type option {
+  width: 300px;
+}
+
+select {
+  text-overflow: ellipsis;
+}
