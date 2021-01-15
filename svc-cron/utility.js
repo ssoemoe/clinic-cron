@@ -76,7 +76,7 @@ module.exports.checkInAppointment = async (id, access_token) => {
     return response;
 }
 
-module.exports.notifyDoctor = async (doctor_id, title, access_token) => {
+module.exports.notifyDoctor = async (doctor_id, title, text, access_token) => {
     const config = {
         headers: {
             'Authorization': `Bearer ${access_token}`
@@ -85,7 +85,7 @@ module.exports.notifyDoctor = async (doctor_id, title, access_token) => {
     const response = await axios.post(`https://app.drchrono.com/api/messages`, {
         'doctor': doctor_id,
         'title': title,
-        'message_notes': [{ 'text': title }]
+        'message_notes': [{ 'text': text }]
     }, config);
     return response;
 };

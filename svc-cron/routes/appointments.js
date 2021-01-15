@@ -77,7 +77,7 @@ router.get('/check-in/:appointmentId/:doctorId/:patientId/:appointmentTime', asy
         const patient = await utility.getPatientInfo(patient_id, access_token);
         const time = new Date(appointment_time).toLocaleTimeString();
         const title = `${patient['first_name']} ${patient['last_name']} for ${time} is in the room now`;
-        const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
+        const notificationResponse = await utility.notifyDoctor(doctor_id, title, title, access_token);
         if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
             return res.status(200).send('<h1>You are all set!</h1>');
     }

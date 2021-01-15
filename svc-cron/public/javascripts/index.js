@@ -143,12 +143,25 @@ $(document).ready(function () {
                 }
             };
             if (patientData["home_phone_number"]) data["home_phone"] = patientData["home_phone_number"];
-            const response = await fetch(`/patients/${patientId}`, {
+            await fetch(`/patients/${patientId}`, {
                 method: "PATCH",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            console.log(response);//DEBUG
+            await fetch(`/insurances`, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: `Insurance information for ${patientData["first_name"]} ${patientData["last_name"]}`,
+                    text: `<h1>Insurance information for ${patientData["first_name"]} ${patientData["last_name"]}</h1><br>
+                    Phone: ${patientData['cell_phone_number']}<br>
+                    Insurance Company: ${patientData["primary_insurance_company_name"]}<br>
+                    Insurance ID No: ${patientData["primary_insurance_id"]}<br>
+                    Insurance Plan Name: ${patientData["primary_insurance_plan_name_id"]}<br>
+                    Insurance Plan Type: ${patientData["insurance_plan_type"]}<br>
+                    Insurance Payer ID: ${patientData["insurance_payer_id"]}<br>`
+                })
+            });
             $("#new-patient-form").html($('#thank_you_div').html());
             $("#prev").hide();
         });
