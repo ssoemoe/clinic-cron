@@ -168,7 +168,7 @@ module.exports = {
             case "early":
                 const appointmentTime = moment(patientAppointmentsInfo.scheduled_time).format("LT")
                 //TODO do the calculation for what time they should be back
-                return this.ask(`Hey ${patientName.firstName} ${patientName.lastName}. You are a bit early for your appointment. Please comeback 15 minutes before ${appointmentTime}`);
+                return this.tell(`Hey ${patientName.firstName} ${patientName.lastName}. You are a bit early for your appointment. Please comeback 15 minutes before ${appointmentTime}`);
                 break;
             case "onTime":
                 const sentEmail = await api.sendCheckInEmail(patientAppointmentsInfo.id,
@@ -177,10 +177,10 @@ module.exports = {
                     patientAppointmentsInfo.scheduled_time);
                 console.log("sentEmail:" + sentEmail)
 
-                return this.ask(`Hey ${patientName.firstName} ${patientName.lastName}, please have a seat and check your email to confirm the check in.`);
+                return this.tell(`Hey ${patientName.firstName} ${patientName.lastName}, please have a seat and check your email to confirm the check in.`);
                 break;
             case "late":
-                return this.ask(`Hey ${patientName.firstName} ${patientName.lastName}, sorry, you are late for your appointment!`);
+                return this.tell(`Hey ${patientName.firstName} ${patientName.lastName}, sorry, you are late for your appointment!`);
                 break;
             default:
                 console.log("switch error")
