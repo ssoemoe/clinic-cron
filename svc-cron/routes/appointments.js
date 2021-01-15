@@ -125,5 +125,30 @@ router.get('/populate-appointments', async (req, res, next) => {
     res.status(200).json(patients);
 });
 
+/* This is the endpoint to populate appointments in DrChrono dashboard (for demo) */
+router.get('/populate-appointments', async (req, res, next) => {
+    const data = {
+        doctor: 286076,
+        office: 303862,
+        duration: 45, // in minutes
+        exam_room: 1,
+        patient: 0,
+        scheduled_time: new Date().toISOString()
+    }
+    const access_token = await utility.refreshToken();
+    const config = { headers: { Authorization: `Bearer ${access_token}` } };
+    let response = await axios.get('https://app.drchrono.com/api/patients', config);
+    let patients = response['data']['results'];
+    let currentDate = new Date();
+    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}T06:00:00`);
+    for (let p of patients) {
+        dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
+        data['patient'] = p['id'];
+        data['scheduled_time'] = dummyAppointmentTime.toISOString().replace(/\.\d{3}Z/i, '');
+        const response = await utility.createAppointment(data, access_token);
+    }
+    res.status(200).json(patients);
+});
+
 
 module.exports = router;

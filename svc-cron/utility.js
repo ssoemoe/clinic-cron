@@ -66,6 +66,23 @@ module.exports.createAppointment = async (appointmentInfo, access_token) => {
     return response;
 }
 
+module.exports.createAppointment = async (appointmentInfo, access_token) => {
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    };
+    try {
+        const data = Object.entries(appointmentInfo).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
+        const response = await axios.post(`https://app.drchrono.com/api/appointments`, data, config);
+        return response;
+    }
+    catch (error) {
+        return error;
+    }
+}
+
 module.exports.checkInAppointment = async (id, access_token) => {
     const config = {
         headers: {

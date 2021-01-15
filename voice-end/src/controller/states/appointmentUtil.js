@@ -45,7 +45,6 @@ module.exports = {
         }
 
         const appointmentTime = appointmentInfo.scheduled_time
-
         const early = moment(appointmentTime).subtract(onTimeOffset, "m");
         const late = moment(appointmentTime).add(onTimeOffset, "m");
         const currentTime = moment();
