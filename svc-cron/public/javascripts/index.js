@@ -1,6 +1,7 @@
 $(document).ready(function () {
     let current = 0;
     let params = {};
+    let insurances = [];
     const divs = [
         'first_name_div',
         'middle_name_div',
@@ -62,14 +63,15 @@ $(document).ready(function () {
     }
     $.getJSON("/insurances", function (insList) {
         let result = insList.sort((a, b) => a.payer_name < b.payer_name ? -1 : a.payer_name > b.payer_name ? 1 : 0);
-        console.log(result);
+        insurances = [...result];
         for (let i = 0; i < result.length; i++) {
             var elem = $("<option></option>");
             elem.attr("value", result[i].payer_id);
+            let text = "";
             if (result[i].payer_name.length > 20) {
-                result[i].payer_name = result[i].payer_name.substring(0, 21);
+                text = result[i].payer_name.substring(0, 21);
             }
-            elem.text(result[i].payer_name);
+            elem.text(text);
             elem.appendTo($(`select#primary_insurance_company_name`));
         }
     });
@@ -155,10 +157,10 @@ $(document).ready(function () {
                     title: `Insurance information for ${patientData["first_name"]} ${patientData["last_name"]}`,
                     text: `<h1>Insurance information for ${patientData["first_name"]} ${patientData["last_name"]}</h1><br>
                     Phone: ${patientData['cell_phone_number']}<br>
-                    Insurance Company: ${patientData["primary_insurance_company_name"]}<br>
+                    Insurance Company: ${insurances.filter(i => i.payer_id === patientData["insurance_payer_id"])[0].payer_name}<br>
                     Insurance ID No: ${patientData["primary_insurance_id"]}<br>
                     Insurance Plan Name: ${patientData["primary_insurance_plan_name_id"]}<br>
-                    Insurance Plan Type: ${patientData["insurance_plan_type"]}<br>
+                    Insurance Plan Type: ${ins_plans.filter(t => t.includes(patientData["insurance_plan_type"]))[0]}<br>
                     Insurance Payer ID: ${patientData["insurance_payer_id"]}<br>`
                 })
             });
