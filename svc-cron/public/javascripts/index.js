@@ -9,6 +9,7 @@ $(document).ready(function () {
         'street_address_2_div',
         'city_div',
         'state_div',
+        'zip_code_div',
         'cell_phone_number_div',
         'home_phone_number_div',
         'email_div',
@@ -86,6 +87,7 @@ $(document).ready(function () {
                 "emergency_contact_phone": patientData["emergency_contact_number"],
                 "emergency_contact_relation": patientData["emergency_contact_relationship"],
                 "emergency_contact_name": patientData["emergency_contact_name"],
+                "zip_code": patientData["zip_code"],
                 "primary_insurance": {
                     "insurance_company": patientData["primary_insurance_company_name"],
                     "insurance_id_number": patientData["primary_insurance_id"],
