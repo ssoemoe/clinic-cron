@@ -4,7 +4,8 @@ var moment = require('moment-timezone');
 var router = express.Router();
 var utility = require('../utility');
 
-const getAppointments = async (queryDate, access_token) => {
+const getAppointments = async (queryDate) => {
+    const access_token = await utility.refreshToken();
     // if no time provided, we will use the current time.
     const appointment_date = queryDate ? new Date(queryDate) : new Date(utility.getCurrentTime());
     const yesterday = new Date(utility.getCurrentTime());
@@ -14,8 +15,8 @@ const getAppointments = async (queryDate, access_token) => {
     const appointment_time = `${utility.formatTime(yesterday)}/${utility.formatTime(dayAfterTomorrow)}`;
     console.log(appointment_time); //DEBUG
     // retrieves all appointments in the same day
-    const appointments = await utility.getAppointments(appointment_time, access_token);
-    console.log(appointments.length);
+    const appointments = await utility.getAppointments(utility.formatTime(appointment_date), access_token);
+    console.log(`Appointments count: ${appointments.length}`); //DEBUG
     // return empty array if there is no appointment
     if (appointments.length == 0) return res.status(200).json(appointments);
     // retrieves and inserts the patient's last name to confirm with the patient
@@ -34,8 +35,8 @@ const getAppointments = async (queryDate, access_token) => {
 router.get('/', async (req, res, next) => {
     // retrieves access_token for DrChrono API calls
     const access_token = await utility.refreshToken();
-    const result = await getAppointments(req.query.date, access_token);
-    return res.status(200).json(result);
+    const result = await axios.get(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`);
+    return res.status(200).json(result['data']);
 });
 
 /* email sending to patient endpoint */
@@ -134,6 +135,10 @@ router.get('/populate-appointments', async (req, res, next) => {
     const dbUpdateRes = await axios.post(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`, dynamoDbItem);
     res.status(Number(dbUpdateRes["status"])).json({ "status": dbUpdateRes["status"], "response": dbUpdateRes["data"] });
 });
+
+router.get('/tz', (req, res, next) => {
+    res.send(utility.getCurrentTime());
+})
 
 
 module.exports = router;

@@ -34,7 +34,8 @@ module.exports.refreshToken = async () => {
 
 module.exports.getAppointments = async (dateStr, access_token) => {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    const response = await axios.get(`https://app.drchrono.com/api/appointments?date_range=${dateStr}&page_size=300`, config);
+    // const response = await axios.get(`https://app.drchrono.com/api/appointments?date_range=${dateStr}&page_size=300`, config);
+    const response = await axios.get(`https://app.drchrono.com/api/appointments?date=${dateStr}&page_size=300`, config);
     return response['data']['results'];
 }
 
@@ -142,7 +143,7 @@ module.exports.sendEmail = async (toEmail, subject, content) => {
 };
 
 module.exports.getCurrentTime = () => {
-    return moment().tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
+    return moment(new Date()).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
 }
 
 module.exports.formatTime = (date) => {
