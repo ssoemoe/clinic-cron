@@ -1,5 +1,6 @@
 var axios = require('axios');
 var express = require('express');
+var moment = require('moment-timezone');
 var router = express.Router();
 var utility = require('../utility');
 
@@ -10,10 +11,10 @@ var utility = require('../utility');
 router.get('/', async (req, res, next) => {
     const millisecondsRegex = /\.\d{3}Z/i;
     // if no time provided, we will use the current time.
-    const appointment_date = req.query.date ? new Date(req.query.date) : new Date();
-    const yesterday = new Date();
+    const appointment_date = req.query.date ? new Date(req.query.date) : new Date(utility.getCurrentTime());
+    const yesterday = new Date(utility.getCurrentTime());
     yesterday.setDate(appointment_date.getDate() - 1);
-    const dayAfterTomorrow = new Date();
+    const dayAfterTomorrow = new Date(utility.getCurrentTime());
     dayAfterTomorrow.setDate(appointment_date.getDate() + 2);
     const appointment_time = `${yesterday.toISOString().replace(millisecondsRegex, '')}/${dayAfterTomorrow.toISOString().replace(millisecondsRegex, '')}`;
     console.log(appointment_time);
@@ -106,48 +107,28 @@ router.get('/populate-appointments', async (req, res, next) => {
         duration: 45, // in minutes
         exam_room: 1,
         patient: 0,
-        scheduled_time: new Date().toISOString()
+        scheduled_time: utility.getCurrentTime()
     }
     const access_token = await utility.refreshToken();
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
     let response = await axios.get('https://app.drchrono.com/api/patients', config);
     let patients = response['data']['results'];
-    let currentDate = new Date();
+    let currentDate = new Date(utility.getCurrentTime());
     let monthString = currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : currentDate.getMonth() + 1;
     let dateString = currentDate.getDate() < 10 ? `0${currentDate.getDate()}` : currentDate.getDate();
     let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${monthString}-${dateString}T06:00:00`);
     for (let p of patients) {
         dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
-        data['scheduled_time'] = dummyAppointmentTime.toISOString().replace(/\.\d{3}Z/i, '');
+        data['scheduled_time'] = moment(dummyAppointmentTime).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
         const response = await utility.createAppointment(data, access_token);
     }
     res.status(200).json(patients);
 });
 
-/* This is the endpoint to populate appointments in DrChrono dashboard (for demo) */
-router.get('/populate-appointments', async (req, res, next) => {
-    const data = {
-        doctor: 286076,
-        office: 303862,
-        duration: 45, // in minutes
-        exam_room: 1,
-        patient: 0,
-        scheduled_time: new Date().toISOString()
-    }
-    const access_token = await utility.refreshToken();
-    const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    let response = await axios.get('https://app.drchrono.com/api/patients', config);
-    let patients = response['data']['results'];
-    let currentDate = new Date();
-    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}T06:00:00`);
-    for (let p of patients) {
-        dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
-        data['patient'] = p['id'];
-        data['scheduled_time'] = dummyAppointmentTime.toISOString().replace(/\.\d{3}Z/i, '');
-        const response = await utility.createAppointment(data, access_token);
-    }
-    res.status(200).json(patients);
+//DEBUG
+router.get("/tz", async (req, res, next) => {
+    res.status(200).send(utility.getCurrentTime());
 });
 
 

@@ -219,7 +219,7 @@ module.exports = {
                 let date = new Date();
                 date.setHours(Number(timeComponents[0]));
                 date.setMinutes(Number(timeComponents[1]));
-                timeInput = date.toISOString();
+                timeInput = moment(date).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
             }
             else {
                 timeInput = this.$inputs ? this.$inputs.time.key : "error no time";

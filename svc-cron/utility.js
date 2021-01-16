@@ -1,5 +1,6 @@
 var axios = require('axios');
 var fs = require('fs');
+var moment = require('moment-timezone');
 var nodemailer = require('nodemailer');
 
 module.exports.createDirIfNotExists = (dir) => {
@@ -138,4 +139,8 @@ module.exports.sendEmail = async (toEmail, subject, content) => {
             }
         });
     });
+};
+
+module.exports.getCurrentTime = () => {
+    return moment().tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
 }
