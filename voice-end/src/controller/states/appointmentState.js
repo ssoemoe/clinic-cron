@@ -216,10 +216,10 @@ module.exports = {
             let timeInput = '';
             if (this.$alexaSkill) {
                 const timeComponents = this.$inputs.time.key.split(':');
-                let date = new Date(moment(new Date()).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss'));
+                let date = new Date(moment(new Date()).utcOffset('-0500').format('YYYY-MM-DDTHH:mm:ss'));
                 date.setHours(Number(timeComponents[0]));
                 date.setMinutes(Number(timeComponents[1]));
-                timeInput = moment(date).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
+                timeInput = moment(date.getTime()).utcOffset('-0500').format('YYYY-MM-DDTHH:mm:ss');
             }
             else {
                 timeInput = this.$inputs ? this.$inputs.time.key : "error no time";
