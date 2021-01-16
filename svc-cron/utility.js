@@ -144,3 +144,7 @@ module.exports.sendEmail = async (toEmail, subject, content) => {
 module.exports.getCurrentTime = () => {
     return moment().tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
 }
+
+module.exports.formatTime = (date) => {
+    return moment(date).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
+}

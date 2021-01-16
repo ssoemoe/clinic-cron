@@ -4,22 +4,15 @@ var moment = require('moment-timezone');
 var router = express.Router();
 var utility = require('../utility');
 
-/* Lists today's appointments within an hour of the API request
-*  The API will return the appointment at the requested time including patient's last name
-* The voice interface will then confirm the last name with the patient and then send the check-in email to patient.
-*/
-router.get('/', async (req, res, next) => {
-    const millisecondsRegex = /\.\d{3}Z/i;
+const getAppointments = async (queryDate, access_token) => {
     // if no time provided, we will use the current time.
-    const appointment_date = req.query.date ? new Date(req.query.date) : new Date(utility.getCurrentTime());
+    const appointment_date = queryDate ? new Date(queryDate) : new Date(utility.getCurrentTime());
     const yesterday = new Date(utility.getCurrentTime());
     yesterday.setDate(appointment_date.getDate() - 1);
     const dayAfterTomorrow = new Date(utility.getCurrentTime());
     dayAfterTomorrow.setDate(appointment_date.getDate() + 2);
-    const appointment_time = `${yesterday.toISOString().replace(millisecondsRegex, '')}/${dayAfterTomorrow.toISOString().replace(millisecondsRegex, '')}`;
-    console.log(appointment_time);
-    // retrieves access_token for DrChrono API calls
-    const access_token = await utility.refreshToken();
+    const appointment_time = `${utility.formatTime(yesterday)}/${utility.formatTime(dayAfterTomorrow)}`;
+    console.log(appointment_time); //DEBUG
     // retrieves all appointments in the same day
     const appointments = await utility.getAppointments(appointment_time, access_token);
     console.log(appointments.length);
@@ -31,7 +24,18 @@ router.get('/', async (req, res, next) => {
         appointments[i]['first_name'] = patient['first_name'];
         appointments[i]['last_name'] = patient['last_name'];
     }
-    return res.status(200).json(appointments);
+    return appointments;
+};
+
+/* Lists today's appointments within an hour of the API request
+*  The API will return the appointment at the requested time including patient's last name
+* The voice interface will then confirm the last name with the patient and then send the check-in email to patient.
+*/
+router.get('/', async (req, res, next) => {
+    // retrieves access_token for DrChrono API calls
+    const access_token = await utility.refreshToken();
+    const result = await getAppointments(req.query.date, access_token);
+    return res.status(200).json(result);
 });
 
 /* email sending to patient endpoint */
@@ -121,14 +125,14 @@ router.get('/populate-appointments', async (req, res, next) => {
         dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
         data['scheduled_time'] = moment(dummyAppointmentTime).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
-        const response = await utility.createAppointment(data, access_token);
+        await utility.createAppointment(data, access_token);
     }
-    res.status(200).json(patients);
-});
+    const appointments = await getAppointments(null, access_token);
+    const dynamoDbItem = { "key": "appts_cache", "value": appointments };
 
-//DEBUG
-router.get("/tz", async (req, res, next) => {
-    res.status(200).send(utility.getCurrentTime());
+    //Update appointments in DynamoDb nightly
+    const dbUpdateRes = await axios.post(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`, dynamoDbItem);
+    res.status(Number(dbUpdateRes["status"])).json({ "status": dbUpdateRes["status"], "response": dbUpdateRes["data"] });
 });
 
 
