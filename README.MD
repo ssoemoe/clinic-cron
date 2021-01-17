@@ -6,7 +6,7 @@
 
 # Clinic Attendant
 
-Clinic Attendant is a contact-less check-in app powered with Amazon Alexa and Google Assistant for clinics/doctors and patients using DrChrono APIs.
+Clinic Attendant is a contact-less virtual check-in app powered with Amazon Alexa and Google Assistant for clinics/doctors and patients using DrChrono APIs.
 (A hackathon project for DrChron hackathon on DevPost)
 
 ## Running the API app
