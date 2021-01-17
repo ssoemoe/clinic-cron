@@ -117,7 +117,8 @@ router.get('/populate-appointments', async (req, res, next) => {
     let response = await axios.get('https://app.drchrono.com/api/patients', config);
     let patients = response['data']['results'];
     let currentDate = new Date(utility.getCurrentTime());
-    console.log(utility.formatTime(currentDate));
+    console.log(`Local: ${currentDate.toLocaleString()}`);
+    console.log(`EST: ${utility.formatTime(currentDate)}`);
     for (let p of patients) {
         currentDate.setHours(currentDate.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
