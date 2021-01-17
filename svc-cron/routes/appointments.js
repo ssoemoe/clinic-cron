@@ -4,8 +4,7 @@ var moment = require('moment-timezone');
 var router = express.Router();
 var utility = require('../utility');
 
-const getAppointments = async (queryDate) => {
-    const access_token = await utility.refreshToken();
+const getAppointments = async (queryDate, access_token) => {
     // if no time provided, we will use the current time.
     const appointment_date = queryDate ? new Date(queryDate) : new Date(utility.getCurrentTime());
     const yesterday = new Date(utility.getCurrentTime());
@@ -122,6 +121,7 @@ router.get('/populate-appointments', async (req, res, next) => {
     let monthString = currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : currentDate.getMonth() + 1;
     let dateString = currentDate.getDate() < 10 ? `0${currentDate.getDate()}` : currentDate.getDate();
     let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${monthString}-${dateString}T06:00:00`);
+    console.log(dummyAppointmentTime);
     for (let p of patients) {
         dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
