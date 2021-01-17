@@ -1,27 +1,21 @@
 var axios = require('axios');
 var express = require('express');
+var moment = require('moment-timezone');
 var router = express.Router();
 var utility = require('../utility');
 
-/* Lists today's appointments within an hour of the API request
-*  The API will return the appointment at the requested time including patient's last name
-* The voice interface will then confirm the last name with the patient and then send the check-in email to patient.
-*/
-router.get('/', async (req, res, next) => {
-    const millisecondsRegex = /\.\d{3}Z/i;
+const getAppointments = async (queryDate, access_token) => {
     // if no time provided, we will use the current time.
-    const appointment_date = req.query.date ? new Date(req.query.date) : new Date();
-    const yesterday = new Date();
+    const appointment_date = queryDate ? new Date(queryDate) : new Date(utility.getCurrentTime());
+    const yesterday = new Date(utility.getCurrentTime());
     yesterday.setDate(appointment_date.getDate() - 1);
-    const dayAfterTomorrow = new Date();
+    const dayAfterTomorrow = new Date(utility.getCurrentTime());
     dayAfterTomorrow.setDate(appointment_date.getDate() + 2);
-    const appointment_time = `${yesterday.toISOString().replace(millisecondsRegex, '')}/${dayAfterTomorrow.toISOString().replace(millisecondsRegex, '')}`;
-    console.log(appointment_time);
-    // retrieves access_token for DrChrono API calls
-    const access_token = await utility.refreshToken();
+    const appointment_time = `${utility.formatTime(yesterday)}/${utility.formatTime(dayAfterTomorrow)}`;
+    console.log(appointment_time); //DEBUG
     // retrieves all appointments in the same day
-    const appointments = await utility.getAppointments(appointment_time, access_token);
-    console.log(appointments.length);
+    const appointments = await utility.getAppointments(utility.formatTime(appointment_date), access_token);
+    console.log(`Appointments count: ${appointments.length}`); //DEBUG
     // return empty array if there is no appointment
     if (appointments.length == 0) return res.status(200).json(appointments);
     // retrieves and inserts the patient's last name to confirm with the patient
@@ -30,7 +24,17 @@ router.get('/', async (req, res, next) => {
         appointments[i]['first_name'] = patient['first_name'];
         appointments[i]['last_name'] = patient['last_name'];
     }
-    return res.status(200).json(appointments);
+    return appointments;
+};
+
+/* Lists today's appointments within an hour of the API request
+*  The API will return the appointment at the requested time including patient's last name
+* The voice interface will then confirm the last name with the patient and then send the check-in email to patient.
+*/
+router.get('/', async (req, res, next) => {
+    // retrieves access_token for DrChrono API calls
+    const result = await axios.get(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`);
+    return res.status(200).json(result['data']);
 });
 
 /* email sending to patient endpoint */
@@ -106,49 +110,32 @@ router.get('/populate-appointments', async (req, res, next) => {
         duration: 45, // in minutes
         exam_room: 1,
         patient: 0,
-        scheduled_time: new Date().toISOString()
+        scheduled_time: utility.getCurrentTime()
     }
     const access_token = await utility.refreshToken();
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
     let response = await axios.get('https://app.drchrono.com/api/patients', config);
     let patients = response['data']['results'];
-    let currentDate = new Date();
-    let monthString = currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : currentDate.getMonth() + 1;
-    let dateString = currentDate.getDate() < 10 ? `0${currentDate.getDate()}` : currentDate.getDate();
-    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${monthString}-${dateString}T06:00:00`);
+    let currentDate = new Date(utility.getCurrentTime());
+    console.log(`Local: ${currentDate.toLocaleString()}`);
+    console.log(`EST: ${utility.formatTime(currentDate)}`);
     for (let p of patients) {
-        dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
+        currentDate.setHours(currentDate.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
-        data['scheduled_time'] = dummyAppointmentTime.toISOString().replace(/\.\d{3}Z/i, '');
-        const response = await utility.createAppointment(data, access_token);
+        data['scheduled_time'] = moment(currentDate).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
+        await utility.createAppointment(data, access_token);
     }
-    res.status(200).json(patients);
+    const appointments = await getAppointments(null, access_token);
+    const dynamoDbItem = { "key": "appts_cache", "value": appointments };
+
+    //Update appointments in DynamoDb nightly
+    const dbUpdateRes = await axios.post(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`, dynamoDbItem);
+    res.status(Number(dbUpdateRes["status"])).json({ "status": dbUpdateRes["status"], "response": dbUpdateRes["data"] });
 });
 
-/* This is the endpoint to populate appointments in DrChrono dashboard (for demo) */
-router.get('/populate-appointments', async (req, res, next) => {
-    const data = {
-        doctor: 286076,
-        office: 303862,
-        duration: 45, // in minutes
-        exam_room: 1,
-        patient: 0,
-        scheduled_time: new Date().toISOString()
-    }
-    const access_token = await utility.refreshToken();
-    const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    let response = await axios.get('https://app.drchrono.com/api/patients', config);
-    let patients = response['data']['results'];
-    let currentDate = new Date();
-    let dummyAppointmentTime = new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}T06:00:00`);
-    for (let p of patients) {
-        dummyAppointmentTime.setHours(dummyAppointmentTime.getHours() + 1); //add 1 hour period between each appointment start time
-        data['patient'] = p['id'];
-        data['scheduled_time'] = dummyAppointmentTime.toISOString().replace(/\.\d{3}Z/i, '');
-        const response = await utility.createAppointment(data, access_token);
-    }
-    res.status(200).json(patients);
-});
+router.get('/tz', (req, res, next) => {
+    res.send(utility.getCurrentTime());
+})
 
 
 module.exports = router;

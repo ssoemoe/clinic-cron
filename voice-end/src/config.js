@@ -7,7 +7,11 @@ module.exports = {
 
   intentMap: {
     'LaunchRequest': 'Welcome',
-    'AMAZON.StopIntent': 'END',
+    'AMAZON.CancelIntent': 'End',
+    'AMAZON.FallbackIntent': 'Help',
+    'AMAZON.NavigateHomeIntent': 'Welcome',
+    'AMAZON.HelpIntent': 'Help',
+    'AMAZON.StopIntent': 'End'
   },
 
   db: {

@@ -83,6 +83,10 @@ app.setHandler({
     this.ask("Sorry, I didn't get that, please tell me your first name");
   },
 
+  End() {
+    this.tell("Thank you for using clinic attendant.");
+  },
+
   Unhandled() {
     return this.toIntent('Help');
   },

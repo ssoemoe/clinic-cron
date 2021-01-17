@@ -115,7 +115,7 @@ module.exports = {
         //No appointments today
         if ((!appointmentList) || appointmentList.length == 0) {
             this.$speech.addText(`Hi ${patientName.firstName} ${patientName.lastName}, you don't have an appointment today.`)
-            return this.ask(this.$speech)
+            return this.tell(this.$speech)
         }
 
         //Look up appointment
@@ -216,15 +216,15 @@ module.exports = {
             let timeInput = '';
             if (this.$alexaSkill) {
                 const timeComponents = this.$inputs.time.key.split(':');
-                let date = new Date();
+                let date = new Date(moment(new Date()).utcOffset('-0500').format('YYYY-MM-DDTHH:mm:ss'));
                 date.setHours(Number(timeComponents[0]));
                 date.setMinutes(Number(timeComponents[1]));
-                timeInput = date.toISOString();
+                timeInput = moment(date.getTime()).utcOffset('-0500').format('YYYY-MM-DDTHH:mm:ss');
             }
             else {
                 timeInput = this.$inputs ? this.$inputs.time.key : "error no time";
             }
-            console.log(timeInput); //DEBUG
+            console.log(`Appointment Time: ${timeInput}`); //DEBUG
             this.$session.$data.dateTime = timeInput;
 
             //Get patient name for input

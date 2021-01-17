@@ -1,5 +1,6 @@
 config/
 db/
+platforms/
 bundle/
 bundle.zip
 examples/

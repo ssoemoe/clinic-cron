@@ -1,6 +1,7 @@
 const moment = require("moment");
 const requestPromise = require('request-promise-native');
 const root = "https://clinic-attendant.herokuapp.com"
+const appointmentsDynamoDb = "https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production";
 
 
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
         console.log(" >>api: getAppointments")
 
         const options = {
-            uri: `${root}/appointments`,
+            uri: `${appointmentsDynamoDb}?api_key=${process.env.REFRESH_TOKEN}`,
             json: true // Automatically parses the JSON string in the response
         };
         return await requestPromise(options);

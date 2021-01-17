@@ -1,5 +1,5 @@
 'use strict';
-
+require('dotenv').config();
 const { ExpressJS, Lambda, Webhook } = require('jovo-framework');
 const { app } = require('./app.js');
 
