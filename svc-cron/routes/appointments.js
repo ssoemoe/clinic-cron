@@ -33,7 +33,6 @@ const getAppointments = async (queryDate, access_token) => {
 */
 router.get('/', async (req, res, next) => {
     // retrieves access_token for DrChrono API calls
-    const access_token = await utility.refreshToken();
     const result = await axios.get(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`);
     return res.status(200).json(result['data']);
 });
