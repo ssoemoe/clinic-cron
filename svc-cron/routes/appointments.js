@@ -7,13 +7,14 @@ var utility = require('../utility');
 const getAppointments = async (queryDate, access_token) => {
     // if no time provided, we will use the current time.
     const appointment_date = queryDate ? new Date(queryDate) : new Date(utility.getCurrentTime());
-    const yesterday = new Date(utility.getCurrentTime());
-    yesterday.setDate(appointment_date.getDate() - 1);
-    const dayAfterTomorrow = new Date(utility.getCurrentTime());
-    dayAfterTomorrow.setDate(appointment_date.getDate() + 2);
-    const appointment_time = `${utility.formatTime(yesterday)}/${utility.formatTime(dayAfterTomorrow)}`;
-    console.log(appointment_time); //DEBUG
+    // const yesterday = new Date(utility.getCurrentTime());
+    // yesterday.setDate(appointment_date.getDate() - 1);
+    // const dayAfterTomorrow = new Date(utility.getCurrentTime());
+    // dayAfterTomorrow.setDate(appointment_date.getDate() + 2);
+    // const appointment_time = `${utility.formatTime(yesterday)}/${utility.formatTime(dayAfterTomorrow)}`;
+    // console.log(appointment_time); //DEBUG
     // retrieves all appointments in the same day
+    access_token = await utility.refreshToken();
     const appointments = await utility.getAppointments(utility.formatTime(appointment_date), access_token);
     console.log(`Appointments count: ${appointments.length}`); //DEBUG
     // return empty array if there is no appointment
@@ -33,8 +34,11 @@ const getAppointments = async (queryDate, access_token) => {
 */
 router.get('/', async (req, res, next) => {
     // retrieves access_token for DrChrono API calls
-    const result = await axios.get(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`);
-    return res.status(200).json(result['data']);
+    const token = await utility.refreshToken();
+    // const result = await axios.get(`https://io8ib2wp18.execute-api.us-east-1.amazonaws.com/production?api_key=${process.env.REFRESH_TOKEN}`);
+
+    const result = await getAppointments(null, token);
+    return res.status(200).json(result);
 });
 
 /* email sending to patient endpoint */
@@ -96,7 +100,7 @@ router.get('/deny/:appointmentId/:doctorId/:appointmentTime', async (req, res, n
     const title = `Appointment at ${time} needs attention. The actual patient did not check-in.`;
     // retrieves access_token for DrChrono API calls
     const access_token = await utility.refreshToken();
-    const notificationResponse = await utility.notifyDoctor(doctor_id, title, access_token);
+    const notificationResponse = await utility.notifyDoctor(doctor_id, title, title, access_token);
     if (notificationResponse && notificationResponse['status'] && notificationResponse['status'] == 201)
         return res.status(200).send('<h1>Thanks for letting us know. We will let you know the incident in details.</h1>');
     return res.status(400).send('<h1>Sorry, can you please notify the clinic reception. We have failed to do it online</h1>');
@@ -115,15 +119,16 @@ router.get('/populate-appointments', async (req, res, next) => {
     const access_token = await utility.refreshToken();
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
     let response = await axios.get('https://app.drchrono.com/api/patients', config);
-    let patients = response['data']['results'];
+    let patients = (response['data']['results']).concat(response['data']['results']);
+    console.log(patients.length);
     let currentDate = new Date(utility.getCurrentTime());
     console.log(`Local: ${currentDate.toLocaleString()}`);
     console.log(`EST: ${utility.formatTime(currentDate)}`);
     for (let p of patients) {
-        currentDate.setHours(currentDate.getHours() + 1); //add 1 hour period between each appointment start time
         data['patient'] = p['id'];
         data['scheduled_time'] = moment(currentDate).tz("America/New_York").format('YYYY-MM-DDTHH:mm:ss');
         await utility.createAppointment(data, access_token);
+        currentDate.setHours(currentDate.getHours() + 1); //add 1 hour period between each appointment start time
     }
     const appointments = await getAppointments(null, access_token);
     const dynamoDbItem = { "key": "appts_cache", "value": appointments };
