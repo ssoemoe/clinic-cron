@@ -35,14 +35,19 @@ module.exports.refreshToken = async () => {
 module.exports.getAppointments = async (dateStr, access_token) => {
     const config = { headers: { Authorization: `Bearer ${access_token}` } };
     // const response = await axios.get(`https://app.drchrono.com/api/appointments?date_range=${dateStr}&page_size=300`, config);
-    const response = await axios.get(`https://app.drchrono.com/api/appointments?date=${dateStr}&page_size=300`, config);
+    const response = await axios.get(`https://app.drchrono.com/api/appointments?date=${dateStr}&page_size=150`, config);
     return response['data']['results'];
 }
 
 module.exports.getPatientInfo = async (id, access_token) => {
-    const config = { headers: { Authorization: `Bearer ${access_token}` } };
-    const response = await axios.get(`https://app.drchrono.com/api/patients/${id}`, config);
-    return response['data'];
+    try {
+        const config = { headers: { Authorization: `Bearer ${access_token}` } };
+        const response = await axios.get(`https://app.drchrono.com/api/patients/${id}`, config);
+        return response['data'];
+    }
+    catch (err) {
+        return { "first_name": "NONE", "last_name": "NONE" }
+    }
 }
 
 module.exports.updatePatientInfo = async (id, formData, access_token) => {
@@ -53,18 +58,6 @@ module.exports.updatePatientInfo = async (id, formData, access_token) => {
         },
     };
     const response = await axios.patch(`https://app.drchrono.com/api/patients/${id}`, formData, config);
-    return response;
-}
-
-module.exports.createAppointment = async (appointmentInfo, access_token) => {
-    const config = {
-        headers: {
-            'Authorization': `Bearer ${access_token}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    };
-    const data = Object.entries(appointmentInfo).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
-    const response = await axios.post(`https://app.drchrono.com/api/appointments`, data, config);
     return response;
 }
 

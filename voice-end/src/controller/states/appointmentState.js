@@ -180,7 +180,7 @@ module.exports = {
                 return this.tell(`Hey ${patientName.firstName} ${patientName.lastName}, please have a seat and check your email to confirm the check in.`);
                 break;
             case "late":
-                return this.tell(`Hey ${patientName.firstName} ${patientName.lastName}, sorry, you are late for your appointment!`);
+                return this.tell(`Hey ${patientName.firstName} ${patientName.lastName}, sorry, you are late for your appointment. Please reschedule online or by contacting us!`);
                 break;
             default:
                 console.log("switch error")
