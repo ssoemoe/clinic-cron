@@ -8,5 +8,5 @@ password: 50f407f21003
 
 3) In the main/home tab:
      Tap on the microphone for Google 
-     Tap on alexa icon for Alexa
+     Tap on Alexa icon for Alexa
 4) Say "Hey Google, talk to Clinic Attendant" or "Alexa, open Clinic Attendant"
