@@ -27,7 +27,8 @@
     "test": "jest",
     "bundle": "gulp --gulpfile node_modules/jovo-framework/gulpfile.js --cwd ./",
     "start": "cd src && node index.js --webhook",
-    "launch": "npm start -- --launch"
+    "launch": "npm start -- --launch",
+    "build": "JS_FILES=$(find -name '*.js' ! -path '*/node_modules/*');set -- `echo $JS_FILES|cut -d ' ' --output-delimiter=\" \" -f 1-`; for i in \"$@\"; do echo $i | cut -c 3-| xargs node --check; done"
   },
   "repository": {
     "type": "git",
