@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-dev": "nodemon ./bin/www"
+    "start-dev": "nodemon ./bin/www",
+    "build": "JS_FILES=$(find -name '*.js' ! -path '*/node_modules/*');set -- `echo $JS_FILES|cut -d ' ' --output-delimiter=\" \" -f 1-`; for i in \"$@\"; do echo $i | cut -c 3-| xargs node --check; done"
   },
   "dependencies": {
     "axios": "^0.21.1",
