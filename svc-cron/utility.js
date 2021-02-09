@@ -114,7 +114,7 @@ module.exports.sendEmail = async (toEmail, subject, content) => {
             service: 'gmail',
             auth: {
                 user: 'cliniccron@gmail.com',
-                pass: '50f407f21003'
+                pass: ''
             }
         });
         const mailOptions = {
