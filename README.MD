@@ -1,8 +1,11 @@
 <p align="center">
     <img src="./assets/clinic-attendant-icon-round.png" width="200" hieght="300">
     <br>
-    <img src="https://github.com/ssoemoe/clinic-cron/workflows/Nightly%20Update/badge.svg" width="200" hieght="300">
+    <!-- <img src="https://github.com/ssoemoe/clinic-cron/workflows/Nightly%20Update/badge.svg" width="200" hieght="300"> -->
 </p>
+
+# [Attention Please] We won Engineers Choice award!
+Please see the details here: https://devpost.com/software/clinic-attendant  
 
 # Clinic Attendant
 
